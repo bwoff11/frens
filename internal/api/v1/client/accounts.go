@@ -12,8 +12,9 @@ func register(c *fiber.Ctx) error {
 		return err
 	}
 
-	var account models.Account
-	account.Username = req.Username
+	var account = models.Account{
+		ID: 123,
+	}
 
 	// Insert new account into database
 	if err := db.DB.Create(&account).Error; err != nil {

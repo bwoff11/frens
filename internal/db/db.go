@@ -3,6 +3,7 @@ package db
 import (
 	"log"
 
+	"github.com/bwoff11/frens/internal/api/v1/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -10,7 +11,7 @@ import (
 var DB *gorm.DB
 
 func Connect() {
-	dbURL := "postgres://testing:testing@localhost:5432/frens"
+	dbURL := "postgres://test:test@localhost:5432/frens"
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
@@ -18,4 +19,6 @@ func Connect() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	DB.AutoMigrate(&models.Account{})
 }

@@ -3,7 +3,13 @@ package client
 import "github.com/gofiber/fiber/v2"
 
 func AddRoutes(app *fiber.App) {
-	v1 := app.Group("/v1")
+	v1 := app.Group("/api/v1")
+
+	v1.Get("/", func(c *fiber.Ctx) error {
+		return c.Status(200).JSON(map[string]string{
+			"message": "Welcome to Frens",
+		})
+	})
 
 	v1.Get("/bookmarks", getSelfBookmarks)
 	v1.Get("/favourites", getSelfFavourites)
@@ -40,7 +46,7 @@ func AddRoutes(app *fiber.App) {
 	flr.Post("/:id/authorize", acceptFollowRequest)
 	flr.Post("/:id/reject", rejectFollowRequest)
 
-	acc := v1.Group("account")
+	acc := v1.Group("/accounts")
 	acc.Post("/", register)
 	acc.Get("/verify_credentials", verifyCredentials)
 	acc.Patch("/update_credentials", updateCredentials)
