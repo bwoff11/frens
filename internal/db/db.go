@@ -7,10 +7,13 @@ import (
 	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+
 func Connect() {
 	dbURL := "postgres://testing:testing@localhost:5432/frens"
 
-	_, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
+	var err error
+	DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)

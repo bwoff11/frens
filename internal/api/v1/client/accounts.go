@@ -1,13 +1,26 @@
 package client
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/bwoff11/frens/internal/api/v1/models"
+	"github.com/bwoff11/frens/internal/db"
+	"github.com/gofiber/fiber/v2"
+)
 
 func register(c *fiber.Ctx) error {
 	var req RegisterRequest
 	if err := c.BodyParser(&req); err != nil {
 		return err
 	}
-	return c.Status(200).JSON(req)
+
+	var account models.Account
+	account.Username = req.Username
+
+	// Insert new account into database
+	if err := db.DB.Create(&account).Error; err != nil {
+		return err
+	}
+
+	return c.Status(200).JSON(account)
 }
 
 func verifyCredentials(c *fiber.Ctx) error {
