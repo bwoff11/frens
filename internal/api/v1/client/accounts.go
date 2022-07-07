@@ -125,3 +125,105 @@ func noteUser(c *fiber.Ctx) error {
 		"message": "NoteUser",
 	})
 }
+
+func getDomainBlocks(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "DomainBlocks",
+	})
+}
+
+func blockDomain(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "BlockDomain",
+	})
+}
+
+func unblockDomain(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "UnblockDomain",
+	})
+}
+
+func getFeaturedTags(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "FeaturedTags",
+	})
+}
+
+func createFeaturedTag(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "CreateFeaturedTag",
+	})
+}
+
+func deleteFeaturedTag(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "DeleteFeaturedTag",
+	})
+}
+
+func getFeaturedTagSuggestions(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "FeaturedTagSuggestions",
+	})
+}
+
+func getFilters(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "Filters",
+	})
+}
+
+func getFilter(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "Filter",
+	})
+}
+
+func createFilter(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "CreateFilter",
+	})
+}
+
+func updateFilter(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "UpdateFilter",
+	})
+}
+
+func deleteFilter(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "DeleteFilter",
+	})
+}
+
+func getFollowRequests(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "FollowRequests",
+	})
+}
+
+func acceptFollowRequest(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "AcceptFollowRequest",
+	})
+}
+
+func rejectFollowRequest(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "RejectFollowRequest",
+	})
+}
+
+func getSuggestions(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "Suggestions",
+	})
+}
+
+func deleteSuggestion(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "DeleteSuggestion",
+	})
+}
