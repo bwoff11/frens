@@ -49,3 +49,9 @@ func UnsuspendAccount(c *fiber.Ctx) error {
 		"message": "UnsuspendAccount",
 	})
 }
+
+func GetUserIdentityProofs(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "UserIdentityProofs",
+	})
+}
