@@ -19,7 +19,8 @@ func authorizeUser(c *fiber.Ctx) error {
 		//return err
 	}
 
-	return c.Redirect("/auth/sign_in")
+	redirect_uri := c.Query("redirect_uri")
+	return c.Redirect(redirect_uri + "?code=12345")
 }
 
 // Returns an access token, to be used during API calls that are not public.

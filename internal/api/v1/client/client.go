@@ -5,8 +5,9 @@ import (
 )
 
 func AddRoutes(app *fiber.App) {
-	ath := app.Group("/auth/sign_in")
-	ath.Static("/", "./public/auth")
+	ath := app.Group("/auth")
+	ath.Static("/sign_in", "./public/login.html")
+	ath.Static("/login_style", "./public/login_styles.css")
 
 	oat := app.Group("/oauth")           // OAuth
 	oat.Get("/authorize", authorizeUser) // /oauth/authorize GET
@@ -33,7 +34,7 @@ func AddRoutes(app *fiber.App) {
 	acc.Get("/:id/following", GetUserFollowing)            // /api/v1/accounts/:id/following GET
 	acc.Get("/:id/featured_tags", GetUserFeaturedTags)     // /api/v1/accounts/:id/featured_tags GET
 	acc.Get("/:id/lists", GetUserLists)                    // /api/v1/accounts/:id/lists GET
-	acc.Get("/:id/identity_proofs", GetUserIdentityProofs) // /api/v1/accounts/:id/identity_proofs GET
+	acc.Get("/:id/identity_proofs", getUserIdentityProofs) // /api/v1/accounts/:id/identity_proofs GET
 	acc.Post("/:id/follow", FollowUser)                    // /api/v1/accounts/:id/follow POST
 	acc.Post("/:id/unfollow", UnfollowUser)                // /api/v1/accounts/:id/unfollow POST
 	acc.Post("/:id/block", BlockUser)                      // /api/v1/accounts/:id/block POST
@@ -47,14 +48,14 @@ func AddRoutes(app *fiber.App) {
 	acc.Get("/search", SearchUsers)                        // /api/v1/accounts/search GET
 
 	act := v1.Group("/admin/accounts")           // Admin - Accounts
-	act.Get("/", GetAccounts)                    // /api/v1/admin/accounts GET
-	act.Get("/:id", GetAccount)                  // /api/v1/admin/accounts/:id GET
-	act.Post("/:id/action", AccountAction)       // /api/v1/admin/accounts/:id/action POST
-	act.Post("/:id/approve", ApproveAccount)     // /api/v1/admin/accounts/:id/approve POST
-	act.Post("/:id/reject", RejectAccount)       // /api/v1/admin/accounts/:id/reject POST
-	act.Post("/:id/enable", EnableAccount)       // /api/v1/admin/accounts/:id/enable POST
-	act.Post("/:id/unsilence", UnsilenceAccount) // /api/v1/admin/accounts/:id/unsilence POST
-	act.Post("/:id/unsuspend", UnsuspendAccount) // /api/v1/admin/accounts/:id/unsuspend POST
+	act.Get("/", getAccounts)                    // /api/v1/admin/accounts GET
+	act.Get("/:id", getAccount)                  // /api/v1/admin/accounts/:id GET
+	act.Post("/:id/action", accountAction)       // /api/v1/admin/accounts/:id/action POST
+	act.Post("/:id/approve", approveAccount)     // /api/v1/admin/accounts/:id/approve POST
+	act.Post("/:id/reject", rejectAccount)       // /api/v1/admin/accounts/:id/reject POST
+	act.Post("/:id/enable", enableAccount)       // /api/v1/admin/accounts/:id/enable POST
+	act.Post("/:id/unsilence", unsilenceAccount) // /api/v1/admin/accounts/:id/unsilence POST
+	act.Post("/:id/unsuspend", unsuspendAccount) // /api/v1/admin/accounts/:id/unsuspend POST
 
 	aps := v1.Group("/apps")                             // Apps
 	aps.Post("/", createApp)                             // /api/v1/apps/ POST

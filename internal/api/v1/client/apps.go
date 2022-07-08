@@ -19,12 +19,6 @@ type Application struct {
 	ClientSecret string `json:"client_secret"`
 }
 
-func getAppOptions(c *fiber.Ctx) error {
-	return c.Status(200).JSON(map[string]string{
-		"message": "not implemented",
-	})
-}
-
 // Create a new application to obtain OAuth2 credentials.
 func createApp(c *fiber.Ctx) error {
 	var req CreateAppRequest

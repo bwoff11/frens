@@ -14,6 +14,11 @@ import (
 func main() {
 	db.Connect()
 	api := fiber.New()
+
+	api.Use(func(c *fiber.Ctx) error {
+		log.Println("Body:", string(c.Body()))
+		return c.Next()
+	})
 	api.Use(logger.New())
 	api.Use(recover.New())
 	api.Use(cors.New(cors.Config{
