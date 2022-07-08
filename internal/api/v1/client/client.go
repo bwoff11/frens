@@ -14,6 +14,19 @@ func AddRoutes(app *fiber.App) {
 	v1.Get("/preferences", GetSelfPreferences)   // /api/v1/preferences GET
 	v1.Post("/reports", ReportUser)              // /api/v1/reports POST
 
+	act := v1.Group("/admin/accounts")           // Admin - Accounts
+	act.Get("/", GetAccounts)                    // /api/v1/admin/accounts GET
+	act.Get("/:id", GetAccount)                  // /api/v1/admin/accounts/:id GET
+	act.Post("/:id/action", AccountAction)       // /api/v1/admin/accounts/:id/action POST
+	act.Post("/:id/approve", ApproveAccount)     // /api/v1/admin/accounts/:id/approve POST
+	act.Post("/:id/reject", RejectAccount)       // /api/v1/admin/accounts/:id/reject POST
+	act.Post("/:id/enable", EnableAccount)       // /api/v1/admin/accounts/:id/enable POST
+	act.Post("/:id/unsilence", UnsilenceAccount) // /api/v1/admin/accounts/:id/unsilence POST
+	act.Post("/:id/unsuspend", UnsuspendAccount) // /api/v1/admin/accounts/:id/unsuspend POST
+
+	ath := app.Group("/auth/sign_in")
+	ath.Static("/", "./public/auth")
+
 	ftt := v1.Group("/featured_tags")                  // FeaturedTags
 	ftt.Get("/", GetFeaturedTags)                      // /api/v1/featured_tags/ GET
 	ftt.Post("/", CreateFeaturedTag)                   // /api/v1/featured_tags/ POST
@@ -63,16 +76,6 @@ func AddRoutes(app *fiber.App) {
 	sug.Get("/", GetSuggestions)         // /api/v1/suggestions/ GET
 	sug.Delete("/:id", DeleteSuggestion) // /api/v1/suggestions/:id DELETE
 
-	act := v1.Group("/admin/accounts")           // Admin - Accounts
-	act.Get("/", GetAccounts)                    // /api/v1/admin/accounts GET
-	act.Get("/:id", GetAccount)                  // /api/v1/admin/accounts/:id GET
-	act.Post("/:id/action", AccountAction)       // /api/v1/admin/accounts/:id/action POST
-	act.Post("/:id/approve", ApproveAccount)     // /api/v1/admin/accounts/:id/approve POST
-	act.Post("/:id/reject", RejectAccount)       // /api/v1/admin/accounts/:id/reject POST
-	act.Post("/:id/enable", EnableAccount)       // /api/v1/admin/accounts/:id/enable POST
-	act.Post("/:id/unsilence", UnsilenceAccount) // /api/v1/admin/accounts/:id/unsilence POST
-	act.Post("/:id/unsuspend", UnsuspendAccount) // /api/v1/admin/accounts/:id/unsuspend POST
-
 	rpt := app.Group("/admin/reports")                  // Admin - Reports
 	rpt.Get("/", GetReports)                            // /api/v1/admin/reports GET
 	rpt.Get("/:id", GetReport)                          // /api/v1/admin/reports/:id GET
@@ -88,7 +91,7 @@ func AddRoutes(app *fiber.App) {
 
 	oat := app.Group("/oauth")           // OAuth
 	oat.Get("/authorize", authorizeUser) // /oauth/authorize GET
-	oat.Get("/token", getToken)          // /oauth/token GET
+	oat.Post("/token", getToken)         // /oauth/token POST
 	oat.Post("/revoke", revokeToken)     // /oauth/revoke POST
 
 	ins := v1.Group("/instance")              // Instances
@@ -96,6 +99,9 @@ func AddRoutes(app *fiber.App) {
 	ins.Get("/peers", getPeers)               // /api/v1/instances/peers GET
 	ins.Get("/activity", getInstanceActivity) // /api/v1/instances/activity GET
 
-	tml := v1.Group("/timelines")          // Timelines
-	tml.Get("/public", getPublicTimelines) // /api/v1/timelines/public GET
+	tml := v1.Group("/timelines")                // Timelines
+	tml.Get("/public", getPublicTimeline)        // /api/v1/timelines/public GET
+	tml.Get("/tag/:hashtag", getHashtagTimeline) // /api/v1/timelines/tag/:hashtag GET
+	tml.Get("/home", getHomeTimeline)            // /api/v1/timelines/home GET
+	tml.Get("/list/:ID", getListTimeline)        // /api/v1/timelines/list/:ID GET
 }

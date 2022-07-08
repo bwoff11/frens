@@ -21,7 +21,7 @@ type Application struct {
 
 func getAppOptions(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "AppOptions",
+		"message": "not implemented",
 	})
 }
 

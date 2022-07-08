@@ -21,6 +21,8 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
+	api.Static("/", "./public")
+
 	v1.AddRoutes(api)
 
 	log.Fatal(api.Listen(":4000"))
