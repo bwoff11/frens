@@ -21,4 +21,7 @@ func Connect() {
 	}
 
 	DB.AutoMigrate(&models.Account{})
+	DB.AutoMigrate(&models.Field{})
+	DB.AutoMigrate(&models.Emoji{})
+	DB.AutoMigrate(&models.Source{})
 }

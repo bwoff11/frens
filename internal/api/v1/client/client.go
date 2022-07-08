@@ -82,7 +82,8 @@ func AddRoutes(app *fiber.App) {
 	rpt.Post("/:id/reopen", ReopenReport)               // /api/v1/admin/reports/:id/reopen POST
 
 	aps := v1.Group("/apps")                             // Apps
-	aps.Options("/", createApp)                          // /api/v1/apps/ OPTIONS
+	aps.Options("/", getAppOptions)                      // /api/v1/apps/ OPTIONS
+	aps.Post("/", createApp)                             // /api/v1/apps/ POST
 	aps.Get("/verify_credentials", verifyAppCredentials) // /api/v1/apps/verify_credentials GET
 
 	oat := v1.Group("/oauth")            // OAuth
@@ -90,7 +91,7 @@ func AddRoutes(app *fiber.App) {
 	oat.Get("/token", getToken)          // /api/v1/oauth/token GET
 	oat.Post("/revoke", revokeToken)     // /api/v1/oauth/revoke POST
 
-	ins := app.Group("/api/v1/instances")     // Instances
+	ins := v1.Group("/instance")              // Instances
 	ins.Get("/", getInstance)                 // /api/v1/instances GET
 	ins.Get("/peers", getPeers)               // /api/v1/instances/peers GET
 	ins.Get("/activity", getInstanceActivity) // /api/v1/instances/activity GET
