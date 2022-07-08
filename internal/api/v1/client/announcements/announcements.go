@@ -1,4 +1,4 @@
-package server
+package announcements
 
 import "github.com/gofiber/fiber/v2"
 

@@ -1,4 +1,4 @@
-package server
+package proofs
 
 import "github.com/gofiber/fiber/v2"
 

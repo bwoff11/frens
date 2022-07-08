@@ -1,4 +1,4 @@
-package server
+package search
 
 import "github.com/gofiber/fiber/v2"
 

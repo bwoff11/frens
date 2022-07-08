@@ -1,4 +1,4 @@
-package server
+package timelines
 
 import "github.com/gofiber/fiber/v2"
 
