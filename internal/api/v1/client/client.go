@@ -104,4 +104,21 @@ func AddRoutes(app *fiber.App) {
 	tml.Get("/tag/:hashtag", getHashtagTimeline) // /api/v1/timelines/tag/:hashtag GET
 	tml.Get("/home", getHomeTimeline)            // /api/v1/timelines/home GET
 	tml.Get("/list/:ID", getListTimeline)        // /api/v1/timelines/list/:ID GET
+
+	sts := v1.Group("/statuses")                    // Statuses
+	sts.Post("/", createStatus)                     // /api/v1/statuses POST
+	sts.Get("/:id", getStatus)                      // /api/v1/statuses/:id GET
+	sts.Delete("/:id", deleteStatus)                // /api/v1/statuses/:id DELETE
+	sts.Get("/:id/context", getStatusContext)       // /api/v1/statuses/:id/context GET
+	sts.Get("/:id/favorited_by", getFavoritedBy)    // /api/v1/statuses/:id/favorited_by GET
+	sts.Post("/:id/favourite", favouriteStatus)     // /api/v1/statuses/:id/favourite POST
+	sts.Post("/:id/unfavourite", unfavouriteStatus) // /api/v1/statuses/:id/unfavourite POST
+	sts.Post("/:id/reblog", reblogStatus)           // /api/v1/statuses/:id/reblog POST
+	sts.Post("/:id/unreblog", unreblogStatus)       // /api/v1/statuses/:id/unreblog POST
+	sts.Post("/:id/bookmark", bookmarkStatus)       // /api/v1/statuses/:id/bookmark POST
+	sts.Post("/:id/unbookmark", unbookmarkStatus)   // /api/v1/statuses/:id/unbookmark POST
+	sts.Post("/:id/mute", muteStatus)               // /api/v1/statuses/:id/mute POST
+	sts.Post("/:id/unmute", unmuteStatus)           // /api/v1/statuses/:id/unmute POST
+	sts.Post("/:id/pin", pinStatus)                 // /api/v1/statuses/:id/pin POST
+	sts.Post("/:id/unpin", unpinStatus)             // /api/v1/statuses/:id/unpin POST
 }

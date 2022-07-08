@@ -1,6 +1,7 @@
 package client
 
 import (
+	"github.com/bwoff11/frens/internal/api/v1/models"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,17 +22,21 @@ func getPublicTimeline(c *fiber.Ctx) error {
 		//return err
 	}
 
-	return nil
+	var resp []models.Status
+	return c.Status(200).JSON(resp)
 }
 
 func getHashtagTimeline(c *fiber.Ctx) error {
-	return nil
+	var resp []models.Status
+	return c.Status(200).JSON(resp)
 }
 
 func getHomeTimeline(c *fiber.Ctx) error {
-	return nil
+	var resp []models.Status
+	return c.Status(200).JSON(resp)
 }
 
 func getListTimeline(c *fiber.Ctx) error {
-	return nil
+	var resp []models.Status
+	return c.Status(200).JSON(resp)
 }

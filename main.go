@@ -18,7 +18,7 @@ func main() {
 	api.Use(recover.New())
 	api.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
-		AllowHeaders: "Origin, Content-Type, Accept",
+		AllowHeaders: "*",
 	}))
 
 	api.Static("/", "./public")
