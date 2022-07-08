@@ -1,16 +1,14 @@
 package client
 
 import (
-	"log"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 type CreateAppRequest struct {
 	ClientName   string `json:"client_name"`
 	RedirectURIs string `json:"redirect_uris"`
-	//Scopes       string `json:"scopes"`
-	//Website      string `json:"website"`
+	Scopes       string `json:"scopes"`
+	Website      string `json:"website"`
 }
 
 type Application struct {
@@ -30,7 +28,6 @@ func getAppOptions(c *fiber.Ctx) error {
 // Create a new application to obtain OAuth2 credentials.
 func createApp(c *fiber.Ctx) error {
 	var req CreateAppRequest
-	log.Println(string(c.Body()))
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(422).JSON(map[string]string{
 			"message": "Validation failed: Redirect URI must be an absolute URI.",
@@ -38,6 +35,11 @@ func createApp(c *fiber.Ctx) error {
 	}
 
 	var resp Application
+	resp.Name = req.ClientName
+	resp.Website = req.Website
+	resp.ClientID = "client_id"
+	resp.ClientSecret = "supersecret"
+	resp.VapidKey = "vapid_key"
 	return c.Status(200).JSON(resp)
 }
 

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	v1 "github.com/bwoff11/frens/internal/api/v1"
 	"github.com/bwoff11/frens/internal/db"
 	"github.com/gofiber/fiber/v2"
@@ -21,5 +23,5 @@ func main() {
 
 	v1.AddRoutes(api)
 
-	api.Listen(":8080")
+	log.Fatal(api.Listen(":4000"))
 }

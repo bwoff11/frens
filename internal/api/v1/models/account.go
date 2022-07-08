@@ -23,9 +23,9 @@ type Account struct {
 	FollowersCount int       `gorm:"not null" json:"followers_count,omitempty"` // The reported followers of this profile.
 	FollowingCount int       `gorm:"not null" json:"following_count,omitempty"` // The reported follows of this profile.
 	//Moved          Account   `gorm:"not null" json:"moved,omitempty"`           // Indicates that the profile is currently inactive and that its user has moved to a new account.
-	//Fields []Field `gorm:"many2many:fields" json:"fields,omitempty"` // Additional metadata attached to a profile as name-value pairs.
-	//Bot    bool    `gorm:"not null" json:"bot,omitempty"`            // A presentational flag. Indicates that the account may perform automated actions, may not be monitored, or identifies as a robot.
-	//Source Source  `gorm:"not null" json:"source,omitempty"`         // An extra entity to be used with API methods to verify credentials and update credentials.
-	//Suspended Account `gorm:"not null" json:"suspended,omitempty"` // An extra entity returned when an account is suspended.
-	//MuteExpiresAt time.Time `gorm:"not null" json:"mute_expires_at,omitempty"` // When a timed mute will expire, if applicable.
+	Fields []Field `gorm:"many2many:fields" json:"fields,omitempty"` // Additional metadata attached to a profile as name-value pairs.
+	Bot    bool    `gorm:"not null" json:"bot,omitempty"`            // A presentational flag. Indicates that the account may perform automated actions, may not be monitored, or identifies as a robot.
+	Source Source  `gorm:"not null" json:"source,omitempty"`         // An extra entity to be used with API methods to verify credentials and update credentials.
+	//Suspended     Account   `gorm:"not null" json:"suspended,omitempty"`       // An extra entity returned when an account is suspended.
+	MuteExpiresAt time.Time `gorm:"not null" json:"mute_expires_at,omitempty"` // When a timed mute will expire, if applicable.
 }

@@ -86,13 +86,16 @@ func AddRoutes(app *fiber.App) {
 	aps.Post("/", createApp)                             // /api/v1/apps/ POST
 	aps.Get("/verify_credentials", verifyAppCredentials) // /api/v1/apps/verify_credentials GET
 
-	oat := v1.Group("/oauth")            // OAuth
-	oat.Get("/authorize", authorizeUser) // /api/v1/oauth/authorize GET
-	oat.Get("/token", getToken)          // /api/v1/oauth/token GET
-	oat.Post("/revoke", revokeToken)     // /api/v1/oauth/revoke POST
+	oat := app.Group("/oauth")           // OAuth
+	oat.Get("/authorize", authorizeUser) // /oauth/authorize GET
+	oat.Get("/token", getToken)          // /oauth/token GET
+	oat.Post("/revoke", revokeToken)     // /oauth/revoke POST
 
 	ins := v1.Group("/instance")              // Instances
 	ins.Get("/", getInstance)                 // /api/v1/instances GET
 	ins.Get("/peers", getPeers)               // /api/v1/instances/peers GET
 	ins.Get("/activity", getInstanceActivity) // /api/v1/instances/activity GET
+
+	tml := v1.Group("/timelines")          // Timelines
+	tml.Get("/public", getPublicTimelines) // /api/v1/timelines/public GET
 }
