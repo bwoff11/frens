@@ -6,3 +6,13 @@ Another issue is storage of intformation such as follower count, which should be
 
 
 Look into struct methogs for db calls
+
+
+Add streaming routes
+Add push 
+Add instance
+add trends
+add directory
+add admin
+add proofs
+add oembed

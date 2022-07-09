@@ -58,7 +58,7 @@ func searchAccounts(req SearchRequest, resp *SearchResponse) {
 
 func searchStatuses(req SearchRequest, resp *SearchResponse) {
 	var foundStatuses []models.Status
-	db.DB.Where("id = ?", req.Q).Find(&foundStatuses)
+	db.DB.Where("content = ?", req.Q).Find(&foundStatuses)
 	resp.Statuses = foundStatuses
 }
 

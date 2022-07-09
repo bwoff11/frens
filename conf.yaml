@@ -1,4 +1,11 @@
 #At this point, the only point of this document is to hold ideas for later use.
 
+
+auto_like_own_posts: true
+
 timeline:
   sort_method: [chronological, smart]
+
+jwt_secret: "supersecret"
+
+# Load JWT Secert from env vars, if not load here

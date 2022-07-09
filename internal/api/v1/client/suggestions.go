@@ -3,13 +3,9 @@ package client
 import "github.com/gofiber/fiber/v2"
 
 func GetSuggestions(c *fiber.Ctx) error {
-	return c.Status(200).JSON(map[string]string{
-		"message": "Suggestions",
-	})
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
 func DeleteSuggestion(c *fiber.Ctx) error {
-	return c.Status(200).JSON(map[string]string{
-		"message": "DeleteSuggestion",
-	})
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }

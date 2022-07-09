@@ -39,7 +39,5 @@ func createApp(c *fiber.Ctx) error {
 
 // Confirm that the app's OAuth2 credentials work.
 func verifyAppCredentials(c *fiber.Ctx) error {
-	return c.Status(200).JSON(map[string]string{
-		"message": "Verified",
-	})
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }

@@ -33,13 +33,9 @@ func getInstance(c *fiber.Ctx) error {
 }
 
 func getPeers(c *fiber.Ctx) error {
-	return c.Status(200).JSON(map[string]string{
-		"message": "Peers",
-	})
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
 func getInstanceActivity(c *fiber.Ctx) error {
-	return c.Status(200).JSON(map[string]string{
-		"message": "InstanceActivity",
-	})
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }

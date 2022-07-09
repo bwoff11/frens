@@ -20,13 +20,14 @@ func Connect() {
 		log.Fatalln(err)
 	}
 
-	//DB.AutoMigrate(&models.Field{})
 	DB.AutoMigrate(&models.Account{})
+	DB.AutoMigrate(&models.Status{})
+	//DB.AutoMigrate(&models.Field{})
 	//DB.AutoMigrate(&models.Activity{})
 	//DB.AutoMigrate(&models.Emoji{})
 	//DB.AutoMigrate(&models.Source{})
 	DB.AutoMigrate(&models.Hashtag{})
-	DB.AutoMigrate(&models.Status{})
+	DB.AutoMigrate(&models.Application{})
 }
 
 func AddAccount(account *models.Account) {

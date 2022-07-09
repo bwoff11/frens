@@ -1,6 +1,9 @@
 package models
 
+import "gorm.io/gorm"
+
 type Application struct {
-	Name    string      `json:"name"`
-	Website interface{} `json:"website"`
+	gorm.Model
+	Name    string `json:"name"`
+	Website string `json:"website"`
 }

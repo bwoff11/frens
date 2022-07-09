@@ -2,34 +2,38 @@ package client
 
 import "github.com/gofiber/fiber/v2"
 
-func getLists(c *fiber.Ctx) error {
-	return c.Status(200).SendString("Not implemented")
-}
-
-func getList(c *fiber.Ctx) error {
+func getAccounts(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
-func createList(c *fiber.Ctx) error {
+func getAccount(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
-func updateList(c *fiber.Ctx) error {
+func accountAction(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
-func deleteList(c *fiber.Ctx) error {
+func approveAccount(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
-func getListAccounts(c *fiber.Ctx) error {
+func rejectAccount(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
-func addAccountToList(c *fiber.Ctx) error {
+func enableAccount(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
-func removeAccountFromList(c *fiber.Ctx) error {
+func unsilenceAccount(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
+}
+
+func unsuspendAccount(c *fiber.Ctx) error {
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
+}
+
+func getUserIdentityProofs(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }

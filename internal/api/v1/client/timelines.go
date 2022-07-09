@@ -1,6 +1,7 @@
 package client
 
 import (
+	"github.com/bwoff11/frens/internal/db"
 	"github.com/bwoff11/frens/internal/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,11 +20,15 @@ func getPublicTimeline(c *fiber.Ctx) error {
 	var reqBody PublicTimelineRequestBody
 	if err := c.BodyParser(&reqBody); err != nil {
 		// check back on this later
-		//return err
+		// return err
 	}
 
 	var resp []models.Status
-	return c.Status(200).JSON(resp)
+	if err := db.DB.Last(&resp).Error; err != nil {
+		return handleDatabaseError(c, err)
+	} else {
+		return c.Status(200).JSON(resp)
+	}
 }
 
 type HashtagTimelineRequestBody struct {
@@ -52,15 +57,17 @@ type HomeTimelineRequestBody struct {
 func getHomeTimeline(c *fiber.Ctx) error {
 	var reqBody HomeTimelineRequestBody
 	if err := c.BodyParser(&reqBody); err != nil {
-		return c.SendStatus(400)
+		//return c.SendStatus(400)
 	}
 
-	// TODO: get ID from token
 	var resp []models.Status
-	return c.Status(200).JSON(resp)
+	if err := db.DB.Last(&resp).Error; err != nil {
+		return handleDatabaseError(c, err)
+	} else {
+		return c.Status(200).JSON(resp)
+	}
 }
 
 func getListTimeline(c *fiber.Ctx) error {
-	var resp []models.Status
-	return c.Status(200).JSON(resp)
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
