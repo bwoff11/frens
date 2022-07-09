@@ -1,57 +1,121 @@
 package client
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
-func getAccounts(c *fiber.Ctx) error {
+func getUserFeaturedTags(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "Accounts",
+		"message": "UserFeaturedTags",
 	})
 }
 
-func getAccount(c *fiber.Ctx) error {
+func createAccount(c *fiber.Ctx) error {
+	return c.Status(200).JSON("desu")
+}
+
+func verifyCredentials(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "Account",
+		"message": "Verified",
 	})
 }
 
-func accountAction(c *fiber.Ctx) error {
+func updateCredentials(c *fiber.Ctx) error {
+	return c.Status(200).JSON("desu")
+}
+
+func getRelationships(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "AccountAction",
+		"message": "Relationships",
 	})
 }
 
-func approveAccount(c *fiber.Ctx) error {
+func searchUsers(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "ApproveAccount",
+		"message": "SearchUsers",
 	})
 }
 
-func rejectAccount(c *fiber.Ctx) error {
+func getUserInfo(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "RejectAccount",
+		"message": "UserInfo",
 	})
 }
 
-func enableAccount(c *fiber.Ctx) error {
+func getUserStatuses(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "EnableAccount",
+		"message": "UserStatuses",
 	})
 }
 
-func unsilenceAccount(c *fiber.Ctx) error {
+func getUserFollowers(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "UnsilenceAccount",
+		"message": "UserFollowers",
 	})
 }
 
-func unsuspendAccount(c *fiber.Ctx) error {
+func getUserFollowing(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "UnsuspendAccount",
+		"message": "UserFollowing",
 	})
 }
 
-func getUserIdentityProofs(c *fiber.Ctx) error {
+func getUserLists(c *fiber.Ctx) error {
 	return c.Status(200).JSON(map[string]string{
-		"message": "UserIdentityProofs",
+		"message": "UserLists",
+	})
+}
+
+func followUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "FollowUser",
+	})
+}
+
+func unfollowUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "UnfollowUser",
+	})
+}
+
+func blockUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "BlockUser",
+	})
+}
+
+func unblockUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "UnblockUser",
+	})
+}
+
+func muteUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "MuteUser",
+	})
+}
+
+func unmuteUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "UnmuteUser",
+	})
+}
+
+func pinUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "PinUser",
+	})
+}
+
+func unpinUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "UnpinUser",
+	})
+}
+
+func noteUser(c *fiber.Ctx) error {
+	return c.Status(200).JSON(map[string]string{
+		"message": "NoteUser",
 	})
 }

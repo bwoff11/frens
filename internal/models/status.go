@@ -1,10 +1,8 @@
 package models
 
-import "time"
-
 type Status struct {
-	ID                 string        `json:"id"`
-	CreatedAt          time.Time     `json:"created_at"`
+	ID string `json:"id"`
+	/*CreatedAt          time.Time     `json:"created_at"`
 	InReplyToID        interface{}   `json:"in_reply_to_id"`
 	InReplyToAccountID interface{}   `json:"in_reply_to_account_id"`
 	Sensitive          bool          `json:"sensitive"`
@@ -29,5 +27,5 @@ type Status struct {
 	Tags               []interface{} `json:"tags"`
 	Emojis             []interface{} `json:"emojis"`
 	Card               Card          `json:"card"`
-	Poll               interface{}   `json:"poll"`
+	Poll               interface{}   `json:"poll"`*/
 }

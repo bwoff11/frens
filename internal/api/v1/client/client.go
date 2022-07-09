@@ -24,28 +24,29 @@ func AddRoutes(app *fiber.App) {
 
 	v1 := app.Group("/api/v1") // Base Routes
 
-	acc := v1.Group("/accounts")                           // Accounts
-	acc.Post("/", Register)                                // /api/v1/accounts POST
-	acc.Get("/verify_credentials", VerifyCredentials)      // /api/v1/accounts/verify_credentials GET
-	acc.Patch("/update_credentials", UpdateCredentials)    // /api/v1/accounts/update_credentials PATCH
-	acc.Get("/:id", GetUserInfo)                           // /api/v1/accounts/:id GET
-	acc.Get("/:id/statuses", GetUserStatuses)              // /api/v1/accounts/:id/statuses GET
-	acc.Get("/:id/followers", GetUserFollowers)            // /api/v1/accounts/:id/followers GET
-	acc.Get("/:id/following", GetUserFollowing)            // /api/v1/accounts/:id/following GET
-	acc.Get("/:id/featured_tags", GetUserFeaturedTags)     // /api/v1/accounts/:id/featured_tags GET
-	acc.Get("/:id/lists", GetUserLists)                    // /api/v1/accounts/:id/lists GET
+	acc := v1.Group("/accounts")                        // Accounts
+	acc.Post("/", createAccount)                        // /api/v1/accounts POST
+	acc.Get("/verify_credentials", verifyCredentials)   // /api/v1/accounts/verify_credentials GET
+	acc.Patch("/update_credentials", updateCredentials) // /api/v1/accounts/update_credentials PATCH
+	acc.Get("/:id", getUserInfo)                        // /api/v1/accounts/:id GET
+	acc.Get("/:id/statuses", getUserStatuses)           // /api/v1/accounts/:id/statuses GET
+	acc.Get("/:id/followers", getUserFollowers)         // /api/v1/accounts/:id/followers GET
+	acc.Get("/:id/following", getUserFollowing)         // /api/v1/accounts/:id/following GET
+	acc.Get("/:id/featured_tags", getUserFeaturedTags)  // /api/v1/accounts/:id/featured_tags GET
+	acc.Get("/:id/lists", getUserLists)                 // /api/v1/accounts/:id/lists GET
+	// Todo: The following isnt in the right place for some reason
 	acc.Get("/:id/identity_proofs", getUserIdentityProofs) // /api/v1/accounts/:id/identity_proofs GET
-	acc.Post("/:id/follow", FollowUser)                    // /api/v1/accounts/:id/follow POST
-	acc.Post("/:id/unfollow", UnfollowUser)                // /api/v1/accounts/:id/unfollow POST
-	acc.Post("/:id/block", BlockUser)                      // /api/v1/accounts/:id/block POST
-	acc.Post("/:id/unblock", UnblockUser)                  // /api/v1/accounts/:id/unblock POST
-	acc.Post("/:id/mute", MuteUser)                        // /api/v1/accounts/:id/mute POST
-	acc.Post("/:id/unmute", UnmuteUser)                    // /api/v1/accounts/:id/unmute POST
-	acc.Post("/:id/pin", PinUser)                          // /api/v1/accounts/:id/pin POST
-	acc.Post("/:id/unpin", UnpinUser)                      // /api/v1/accounts/:id/unpin POST
-	acc.Post("/:id/note", NoteUser)                        // /api/v1/accounts/:id/note POST
-	acc.Get("/relationships", GetRelationships)            // /api/v1/accounts/relationships GET
-	acc.Get("/search", SearchUsers)                        // /api/v1/accounts/search GET
+	acc.Post("/:id/follow", followUser)                    // /api/v1/accounts/:id/follow POST
+	acc.Post("/:id/unfollow", unfollowUser)                // /api/v1/accounts/:id/unfollow POST
+	acc.Post("/:id/block", blockUser)                      // /api/v1/accounts/:id/block POST
+	acc.Post("/:id/unblock", unblockUser)                  // /api/v1/accounts/:id/unblock POST
+	acc.Post("/:id/mute", muteUser)                        // /api/v1/accounts/:id/mute POST
+	acc.Post("/:id/unmute", unmuteUser)                    // /api/v1/accounts/:id/unmute POST
+	acc.Post("/:id/pin", pinUser)                          // /api/v1/accounts/:id/pin POST
+	acc.Post("/:id/unpin", unpinUser)                      // /api/v1/accounts/:id/unpin POST
+	acc.Post("/:id/note", noteUser)                        // /api/v1/accounts/:id/note POST
+	acc.Get("/relationships", getRelationships)            // /api/v1/accounts/relationships GET
+	acc.Get("/search", searchUsers)                        // /api/v1/accounts/search GET
 
 	act := v1.Group("/admin/accounts")           // Admin - Accounts
 	act.Get("/", getAccounts)                    // /api/v1/admin/accounts GET
@@ -66,6 +67,11 @@ func AddRoutes(app *fiber.App) {
 
 	blk := v1.Group("/blocks")  // Blocks
 	blk.Get("/", GetSelfBlocks) // /api/v1/blocks GET
+
+	cvs := v1.Group("/conversations")      // Conversations
+	cvs.Get("/", getSelfConversations)     // /api/v1/conversations GET
+	cvs.Delete("/:id", deleteConversation) // /api/v1/conversations/:id DELETE
+	cvs.Post("/:id", markConversationRead) // /api/v1/conversations/:id POST
 
 	dmb := v1.Group("/domain_blocks") // DomainBlocks
 	dmb.Get("/", GetDomainBlocks)     // /api/v1/domain_blocks/ GET
@@ -95,6 +101,16 @@ func AddRoutes(app *fiber.App) {
 	flr.Get("/", GetFollowRequests)                 // api/v1/follow_requests GET
 	flr.Post("/:id/authorize", AcceptFollowRequest) // api/v1/follow_requests/:id/authorize POST
 	flr.Post("/:id/reject", RejectFollowRequest)    // api/v1/follow_requests/:id/reject POST
+
+	lst := v1.Group("/lists")                          // Lists
+	lst.Get("/", getLists)                             // /api/v1/lists GET
+	lst.Get("/:id", getList)                           // /api/v1/lists/:id GET
+	lst.Post("/", createList)                          // /api/v1/lists POST
+	lst.Put("/:id", updateList)                        // /api/v1/lists/:id PUT
+	lst.Delete("/:id", deleteList)                     // /api/v1/lists/:id DELETE
+	lst.Get("/:id/accounts", getListAccounts)          // /api/v1/lists/:id/accounts GET
+	lst.Post("/:id/accounts", addAccountToList)        // /api/v1/lists/:id/accounts POST
+	lst.Delete("/:id/accounts", removeAccountFromList) // /api/v1/lists/:id/accounts DELETE
 
 	mda := v1.Group("/media")    // Media
 	mda.Post("/", attachMedia)   // /api/v1/media POST

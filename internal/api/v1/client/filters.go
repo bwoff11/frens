@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/bwoff11/frens/internal/api/v1/models"
+	"github.com/bwoff11/frens/internal/models"
 	"github.com/gofiber/fiber/v2"
 )
 

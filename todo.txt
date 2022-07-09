@@ -1,0 +1,8 @@
+There is an issue at the moment where the structs used in models are being used for both the database and API responses.
+
+This is a huge problem because it exposes a lot of information such as passwords. These need to be divided into separate entitiet and the DB package should be responsible for translation between the two.
+
+Another issue is storage of intformation such as follower count, which should be a calculated metric instead of a stored one.
+
+
+Look into struct methogs for db calls
