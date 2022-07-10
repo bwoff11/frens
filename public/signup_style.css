@@ -6,6 +6,7 @@
   background-size: cover;
 }
 
+
 .login-page {
   width: 360px;
   padding: 8% 0 0;
@@ -54,11 +55,10 @@ border-radius:30px;
   cursor: pointer;
   transition: all 0.2s;
 
-
 }
 .form button:hover,.form button:focus {
   background: #148f77;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   transform: translateY(-4px);
 }
 .form button:active {
@@ -127,5 +127,5 @@ body {
   background: linear-gradient(to left, #76b852, #8DC26F);
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;      
+  -moz-osx-font-smoothing: grayscale;    
 }

@@ -1,6 +1,8 @@
 package db
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"log"
 
 	"github.com/bwoff11/frens/internal/models"
@@ -28,6 +30,13 @@ func Connect() {
 	//DB.AutoMigrate(&models.Source{})
 	DB.AutoMigrate(&models.Hashtag{})
 	DB.AutoMigrate(&models.Application{})
+	DB.AutoMigrate(&models.OAuthApplication{})
+}
+
+func HashPassword(password string) string {
+	data := []byte(password)
+	encrypted := fmt.Sprintf("%x", sha256.Sum256(data))
+	return encrypted
 }
 
 func AddAccount(account *models.Account) {

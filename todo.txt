@@ -16,3 +16,17 @@ add directory
 add admin
 add proofs
 add oembed
+
+
+Change application registration to use memory store and prevent dupes
+
+
+app flow:
+- instance
+- apps
+- oauth authorize
+- oauth token
+- accounts / verify credentials
+
+
+add db salt in config which effects hash

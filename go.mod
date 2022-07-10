@@ -4,14 +4,18 @@ go 1.18
 
 require (
 	github.com/gofiber/fiber/v2 v2.35.0
+	github.com/golang-jwt/jwt/v4 v4.4.2
+	github.com/google/uuid v1.1.2
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/viper v1.12.0
+	gopkg.in/oauth2.v3 v3.12.0
 	gorm.io/driver/postgres v1.3.8
 	gorm.io/gorm v1.23.8
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
@@ -35,6 +39,14 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.3.0 // indirect
+	github.com/tidwall/btree v0.0.0-20170113224114-9876f1454cf0 // indirect
+	github.com/tidwall/buntdb v1.1.0 // indirect
+	github.com/tidwall/gjson v1.3.2 // indirect
+	github.com/tidwall/grect v0.0.0-20161006141115-ba9a043346eb // indirect
+	github.com/tidwall/match v1.0.1 // indirect
+	github.com/tidwall/pretty v1.0.0 // indirect
+	github.com/tidwall/rtree v0.0.0-20180113144539-6cd427091e0e // indirect
+	github.com/tidwall/tinyqueue v0.0.0-20180302190814-1e39f5511563 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.38.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect

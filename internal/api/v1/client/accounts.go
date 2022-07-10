@@ -1,6 +1,7 @@
 package client
 
 import (
+	"log"
 	"time"
 
 	"github.com/bwoff11/frens/internal/db"
@@ -26,6 +27,11 @@ func createAccount(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
 	}
 
+	password := reqBody.Password
+	hashedPassword := db.HashPassword(password)
+	log.Println(password)
+	log.Println(hashedPassword)
+
 	var newAccount = &models.Account{
 		Username:     reqBody.Username,
 		Acct:         reqBody.Username,
@@ -43,7 +49,7 @@ func createAccount(c *fiber.Ctx) error {
 		Bot:           false,
 		Suspended:     false,
 		MuteExpiresAt: time.Now(),
-		Password:      reqBody.Password, // salt this
+		Password:      db.HashPassword(reqBody.Password),
 	}
 
 	if err := db.DB.Create(newAccount).Error; err != nil {

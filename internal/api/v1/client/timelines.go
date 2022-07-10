@@ -19,8 +19,9 @@ type PublicTimelineRequestBody struct {
 func getPublicTimeline(c *fiber.Ctx) error {
 	var reqBody PublicTimelineRequestBody
 	if err := c.BodyParser(&reqBody); err != nil {
-		// check back on this later
-		// return err
+		return c.Status(400).JSON(map[string]string{
+			"error": "Invalid request body",
+		})
 	}
 
 	var resp []models.Status

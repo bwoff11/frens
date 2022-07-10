@@ -8,14 +8,15 @@ import (
 )
 
 func AddRoutes(app *fiber.App) {
-	ath := app.Group("/auth")
-	ath.Static("/sign_in", "./public/login.html")
-	ath.Static("/login_style", "./public/login_styles.css")
 
-	oat := app.Group("/oauth")           // OAuth
-	oat.Get("/authorize", authorizeUser) // /oauth/authorize GET
-	oat.Post("/token", getToken)         // /oauth/token POST
-	oat.Post("/revoke", revokeToken)     // /oauth/revoke POST
+	oat := app.Group("/oauth")                // OAuth
+	oat.Get("/authorize", loginPage)          // /oauth/authorize GET - THIS SHOULD BE DONE BETTER
+	oat.Post("/authorize", login)             // /oauth/authorize POST - THIS SHOULD BE DONE BETTER
+	oat.Get("/login_style.css", loginStyle)   // /oauth/login_style.css GET - THIS SHOULD BE DONE BETTER
+	oat.Get("/signup.html", signupPage)       // /oauth/signup.html GET - THIS SHOULD BE DONE BETTER
+	oat.Get("/signup_style.css", signupStyle) // /oauth/signup_style.css GET - THIS SHOULD BE DONE BETTER
+	oat.Post("/token", getToken)              // /oauth/token POST
+	oat.Post("/revoke", revokeToken)          // /oauth/revoke POS
 
 	arp := app.Group("/admin/reports")                  // Admin - Reports
 	arp.Get("/", getReports)                            // /api/v1/admin/reports GET

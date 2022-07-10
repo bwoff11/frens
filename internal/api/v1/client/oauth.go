@@ -1,10 +1,12 @@
 package client
 
 import (
-	"log"
 	"time"
 
+	"github.com/bwoff11/frens/internal/db"
+	"github.com/bwoff11/frens/internal/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type AuthorizeUserRequest struct {
@@ -16,19 +18,47 @@ type AuthorizeUserRequest struct {
 }
 
 // Displays an authorization form to the user. If approved, it will create and return an authorization code, then redirect to the desired redirect_uri, or show the authorization code if urn:ietf:wg:oauth:2.0:oob was requested. The authorization code can be used while requesting a token to obtain access to user-level methods.
-func authorizeUser(c *fiber.Ctx) error {
-	req := AuthorizeUserRequest{
-		ResponseType: c.Query("response_type"),
-		ClientID:     c.Query("client_id"),
-		RedirectURI:  c.Query("redirect_uri"),
-		Scope:        c.Query("scope"),
-		ForceLogin:   c.Query("force_login") == "true",
+func loginPage(c *fiber.Ctx) error {
+	/*
+		req := AuthorizeUserRequest{
+			ResponseType: c.Query("response_type"),
+			ClientID:     c.Query("client_id"),
+			RedirectURI:  c.Query("redirect_uri"),
+			Scope:        c.Query("scope"),
+			ForceLogin:   c.Query("force_login") == "true",
+		}*/
+
+	// validate request here
+
+	// Return login form
+	return c.Status(200).SendFile("./public/login.html")
+}
+
+func login(c *fiber.Ctx) error {
+	username := c.FormValue("username")
+	password := c.FormValue("password")
+	passwordHash := db.HashPassword(password)
+
+	var Account models.Account
+	if err := db.DB.Where("username = ? AND password = ?", username, passwordHash).First(&Account).Error; err != nil {
+		return c.Status(fiber.StatusUnauthorized).SendString("Invalid username or password")
+	} else {
+		//return c.Status(200).SendString("Logged in")
+		redirect_uri := c.Query("redirect_uri")
+		return c.Redirect(redirect_uri + "?code=12345")
 	}
+}
 
-	log.Println(req.ClientID)
+func loginStyle(c *fiber.Ctx) error {
+	return c.Status(200).SendFile("./public/login_style.css")
+}
 
-	redirect_uri := c.Query("redirect_uri")
-	return c.Redirect(redirect_uri + "?code=12345")
+func signupPage(c *fiber.Ctx) error {
+	return c.Status(200).SendFile("./public/signup.html")
+}
+
+func signupStyle(c *fiber.Ctx) error {
+	return c.Status(200).SendFile("./public/signup_style.css")
 }
 
 type GetTokenRequest struct {
@@ -40,26 +70,33 @@ type GetTokenRequest struct {
 	Code         string `json:"code" form:"code"`                  // Authorization code obtained from the authorization server.
 }
 
-// Returns an access token, to be used during API calls that are not public.
+// The client sends the application data we returned in the application registration form.
+// Here, we use that information to generate a access token.
 func getToken(c *fiber.Ctx) error {
-	/*req := GetTokenRequest{
-		GrantType:    c.Query("grant_type"),
-		ClientID:     c.Query("client_id"),
-		ClientSecret: c.Query("client_secret"),
-		RedirectURI:  c.Query("redirect_uri"),
-		Scope:        c.Query("scope"),
-		Code:         c.Query("code"),
-	}*/
-
-	// do something
-
-	newToken := Token{
-		AccessToken: "12345",
-		TokenType:   "Bearer",
-		Scope:       "read write follow push",
-		CreatedAt:   uint64(time.Now().Unix()),
+	var req GetTokenRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
 	}
-	return c.Status(fiber.StatusOK).JSON(newToken)
+
+	// validate request here
+
+	// Create the Claims
+	claims := jwt.MapClaims{
+		"name":  "John Doe",
+		"admin": true,
+		"exp":   time.Now().Add(time.Hour * 72).Unix(),
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	// Generate encoded token and send it as response.
+	t, err := token.SignedString([]byte("secret"))
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	return c.JSON(fiber.Map{"token": t})
 }
 
 // Revoke an access token to make it no longer valid for use.
