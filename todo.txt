@@ -30,3 +30,12 @@ app flow:
 
 
 add db salt in config which effects hash
+
+
+
+
+1. Client requests login page and sends
+- response type
+- client id
+- redirect URI etc
+2. 

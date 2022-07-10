@@ -51,7 +51,7 @@ func createApp(c *fiber.Ctx) error {
 	newOAuthApp := models.OAuthApplication{
 		ID:     newApp.ClientID,
 		Secret: newApp.ClientSecret,
-		Domain: req.RedirectURIs,
+		Domain: req.Website,
 		UserID: "",
 	}
 
@@ -74,9 +74,6 @@ func createApp(c *fiber.Ctx) error {
 
 	// Return the application to the client
 	return c.Status(200).JSON(newAppResponse)
-}
-
-type VerifyTokenRequest struct {
 }
 
 // Confirm that the app's OAuth2 credentials work.

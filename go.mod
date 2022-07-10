@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/gofiber/fiber/v2 v2.35.0
+	github.com/gofiber/jwt/v3 v3.2.13
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/uuid v1.1.2
 	github.com/spf13/cobra v1.5.0

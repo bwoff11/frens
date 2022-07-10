@@ -1,19 +1,33 @@
 package oauth
 
 import (
+	"log"
+
+	"gopkg.in/oauth2.v3/errors"
 	"gopkg.in/oauth2.v3/manage"
-	"gopkg.in/oauth2.v3/models"
+	"gopkg.in/oauth2.v3/server"
 	"gopkg.in/oauth2.v3/store"
 )
 
-func init() {
-	manager := manage.NewDefaultManager()
-	manager.MustTokenStorage(store.NewMemoryTokenStore())
+var Manager = manage.NewDefaultManager()
+var ClientStore = store.NewClientStore()
+var Server = server.NewDefaultServer(Manager)
 
-	clientStore := store.NewClientStore()
-	clientStore.Set("222222", &models.Client{
-		ID:     "222222",
-		Secret: "22222222",
-		Domain: "http://localhost:9094",
+func init() {
+	Manager.SetAuthorizeCodeTokenCfg(manage.DefaultAuthorizeCodeTokenCfg)
+	Manager.MustTokenStorage(store.NewMemoryTokenStore())
+	Manager.MapClientStorage(ClientStore)
+
+	Server.SetAllowGetAccessRequest(true)
+	Server.SetClientInfoHandler(server.ClientFormHandler)
+	Manager.SetRefreshTokenCfg(manage.DefaultRefreshTokenCfg)
+
+	Server.SetInternalErrorHandler(func(err error) (re *errors.Response) {
+		log.Println("Internal Error:", err.Error())
+		return
+	})
+
+	Server.SetResponseErrorHandler(func(re *errors.Response) {
+		log.Println("Response Error:", re.Error.Error())
 	})
 }

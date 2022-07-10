@@ -19,6 +19,22 @@ type OAuthApplication struct {
 	UserID string `json:"user_id"`
 }
 
+func (a OAuthApplication) GetID() string {
+	return a.ID
+}
+
+func (a OAuthApplication) GetSecret() string {
+	return a.Secret
+}
+
+func (a OAuthApplication) GetDomain() string {
+	return a.Domain
+}
+
+func (a OAuthApplication) GetUserID() string {
+	return a.UserID
+}
+
 type ApplicationResponse struct {
 	ID           string `json:"id"`
 	Name         string `json:"name"`
