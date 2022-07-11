@@ -2,8 +2,9 @@ package client
 
 import (
 	"log"
-	"time"
 
+	"github.com/bwoff11/frens/internal/db"
+	"github.com/bwoff11/frens/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -44,10 +45,18 @@ func getLoginPage(c *fiber.Ctx) error {
 	//return c.Status(200).SendFile("./public/login.html")
 }
 
+// After the user provides a username and password, it is checked against the db.
+// If the user is valid, a code is generated that maps to the user's account.
+// The code is stored then sent to the end user to request a token.
 func login(c *fiber.Ctx) error {
-	//req := GetTokenRequest{}
+	username := c.FormValue("username")
+	password := c.FormValue("password")
 
-	//return c.Status(200).SendString("Logged in")
+	// Check if username and password are correct
+	if err := db.DB.Select("id").Where("username = ? AND password = ?", username, password).First(&models.Account{}).Error; err != nil {
+		return c.SendStatus(fiber.StatusUnauthorized)
+	}
+
 	return c.Redirect("http://localhost:4002/settings/instances/add?code=tFwEduJ4Act2PTmZ0osjp175WX-dfrOxO_H7W20-9rU")
 }
 
@@ -85,9 +94,7 @@ func getToken(c *fiber.Ctx) error {
 
 	// Create the Claims
 	claims := jwt.MapClaims{
-		"name":  "John Doe",
-		"admin": true,
-		"exp":   time.Now().Add(time.Hour * 72).Unix(),
+		"account_id": "12345",
 	}
 
 	// Create token

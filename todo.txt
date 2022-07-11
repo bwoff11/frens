@@ -33,9 +33,4 @@ add db salt in config which effects hash
 
 
 
-
-1. Client requests login page and sends
-- response type
-- client id
-- redirect URI etc
-2. 
+When registering an application using Mastodon's REST API, there is a redirect_uris parameter. When interfacing with OAuth endpoints, you must use the redirect_uri parameter instead, and this parameter's value must be one of the redirect_uris registered with the app.

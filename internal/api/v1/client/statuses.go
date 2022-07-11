@@ -6,6 +6,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func addStatusRoutes(app *fiber.App) {
+	sts := app.Group("/api/v1/statuses")            // Statuses
+	sts.Post("/", createStatus)                     // /api/v1/statuses POST
+	sts.Get("/:id", getStatus)                      // /api/v1/statuses/:id GET
+	sts.Delete("/:id", deleteStatus)                // /api/v1/statuses/:id DELETE
+	sts.Get("/:id/context", getStatusContext)       // /api/v1/statuses/:id/context GET
+	sts.Get("/:id/favorited_by", getFavoritedBy)    // /api/v1/statuses/:id/favorited_by GET
+	sts.Post("/:id/favourite", favouriteStatus)     // /api/v1/statuses/:id/favourite POST
+	sts.Post("/:id/unfavourite", unfavouriteStatus) // /api/v1/statuses/:id/unfavourite POST
+	sts.Post("/:id/reblog", reblogStatus)           // /api/v1/statuses/:id/reblog POST
+	sts.Post("/:id/unreblog", unreblogStatus)       // /api/v1/statuses/:id/unreblog POST
+	sts.Post("/:id/bookmark", bookmarkStatus)       // /api/v1/statuses/:id/bookmark POST
+	sts.Post("/:id/unbookmark", unbookmarkStatus)   // /api/v1/statuses/:id/unbookmark POST
+	sts.Post("/:id/mute", muteStatus)               // /api/v1/statuses/:id/mute POST
+	sts.Post("/:id/unmute", unmuteStatus)           // /api/v1/statuses/:id/unmute POST
+	sts.Post("/:id/pin", pinStatus)                 // /api/v1/statuses/:id/pin POST
+	sts.Post("/:id/unpin", unpinStatus)             // /api/v1/statuses/:id/unpin POST
+}
+
 type CreateStatusBody struct {
 	Status string `json:"status" form:"status"` // Text content of the status. If media_ids is provided, this becomes optional. Attaching a poll is optional while status is provided.
 	// media ids
@@ -71,8 +90,13 @@ func deleteStatus(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
+// View statuses above and below this status in the thread.
 func getStatusContext(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
+	//id := c.Params("id")
+
+	var context models.Context
+	// to be implemented
+	return c.Status(200).JSON(&context)
 }
 
 func getFavoritedBy(c *fiber.Ctx) error {

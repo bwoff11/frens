@@ -9,6 +9,8 @@ import (
 
 func AddRoutes(app *fiber.App) {
 	addOAuthRoutes(app)
+	addStatusRoutes(app)
+	addAccountRoutes(app)
 
 	arp := app.Group("/admin/reports")                  // Admin - Reports
 	arp.Get("/", getReports)                            // /api/v1/admin/reports GET
@@ -19,30 +21,6 @@ func AddRoutes(app *fiber.App) {
 	arp.Post("/:id/reopen", reopenReport)               // /api/v1/admin/reports/:id/reopen POST
 
 	v1 := app.Group("/api/v1") // Base Routes
-
-	acc := v1.Group("/accounts")                        // Accounts
-	acc.Post("/", createAccount)                        // /api/v1/accounts POST
-	acc.Get("/verify_credentials", verifyCredentials)   // /api/v1/accounts/verify_credentials GET
-	acc.Patch("/update_credentials", updateCredentials) // /api/v1/accounts/update_credentials PATCH
-	acc.Get("/:id", getUserInfo)                        // /api/v1/accounts/:id GET
-	acc.Get("/:id/statuses", getUserStatuses)           // /api/v1/accounts/:id/statuses GET
-	acc.Get("/:id/followers", getUserFollowers)         // /api/v1/accounts/:id/followers GET
-	acc.Get("/:id/following", getUserFollowing)         // /api/v1/accounts/:id/following GET
-	acc.Get("/:id/featured_tags", getUserFeaturedTags)  // /api/v1/accounts/:id/featured_tags GET
-	acc.Get("/:id/lists", getUserLists)                 // /api/v1/accounts/:id/lists GET
-	// Todo: The following isnt in the right place for some reason
-	acc.Get("/:id/identity_proofs", getUserIdentityProofs) // /api/v1/accounts/:id/identity_proofs GET
-	acc.Post("/:id/follow", followUser)                    // /api/v1/accounts/:id/follow POST
-	acc.Post("/:id/unfollow", unfollowUser)                // /api/v1/accounts/:id/unfollow POST
-	acc.Post("/:id/block", blockUser)                      // /api/v1/accounts/:id/block POST
-	acc.Post("/:id/unblock", unblockUser)                  // /api/v1/accounts/:id/unblock POST
-	acc.Post("/:id/mute", muteUser)                        // /api/v1/accounts/:id/mute POST
-	acc.Post("/:id/unmute", unmuteUser)                    // /api/v1/accounts/:id/unmute POST
-	acc.Post("/:id/pin", pinUser)                          // /api/v1/accounts/:id/pin POST
-	acc.Post("/:id/unpin", unpinUser)                      // /api/v1/accounts/:id/unpin POST
-	acc.Post("/:id/note", noteUser)                        // /api/v1/accounts/:id/note POST
-	acc.Get("/relationships", getRelationships)            // /api/v1/accounts/relationships GET
-	acc.Get("/search", searchUsers)                        // /api/v1/accounts/search GET
 
 	act := v1.Group("/admin/accounts")           // Admin - Accounts
 	act.Get("/", getAccounts)                    // /api/v1/admin/accounts GET
@@ -165,23 +143,6 @@ func AddRoutes(app *fiber.App) {
 	sch.Get("/:id", getScheduledStatus)       // /api/v1/scheduled_statuses/:id GET
 	sch.Put("/:id", scheduleStatus)           // /api/v1/scheduled_statuses/:id PUT
 	sch.Delete("/:id", deleteScheduledStatus) // /api/v1/scheduled_statuses/:id DELETE
-
-	sts := v1.Group("/statuses")                    // Statuses
-	sts.Post("/", createStatus)                     // /api/v1/statuses POST
-	sts.Get("/:id", getStatus)                      // /api/v1/statuses/:id GET
-	sts.Delete("/:id", deleteStatus)                // /api/v1/statuses/:id DELETE
-	sts.Get("/:id/context", getStatusContext)       // /api/v1/statuses/:id/context GET
-	sts.Get("/:id/favorited_by", getFavoritedBy)    // /api/v1/statuses/:id/favorited_by GET
-	sts.Post("/:id/favourite", favouriteStatus)     // /api/v1/statuses/:id/favourite POST
-	sts.Post("/:id/unfavourite", unfavouriteStatus) // /api/v1/statuses/:id/unfavourite POST
-	sts.Post("/:id/reblog", reblogStatus)           // /api/v1/statuses/:id/reblog POST
-	sts.Post("/:id/unreblog", unreblogStatus)       // /api/v1/statuses/:id/unreblog POST
-	sts.Post("/:id/bookmark", bookmarkStatus)       // /api/v1/statuses/:id/bookmark POST
-	sts.Post("/:id/unbookmark", unbookmarkStatus)   // /api/v1/statuses/:id/unbookmark POST
-	sts.Post("/:id/mute", muteStatus)               // /api/v1/statuses/:id/mute POST
-	sts.Post("/:id/unmute", unmuteStatus)           // /api/v1/statuses/:id/unmute POST
-	sts.Post("/:id/pin", pinStatus)                 // /api/v1/statuses/:id/pin POST
-	sts.Post("/:id/unpin", unpinStatus)             // /api/v1/statuses/:id/unpin POST
 }
 
 // https://github.com/go-gorm/gorm/blob/master/errors.go
