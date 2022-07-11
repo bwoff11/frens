@@ -18,16 +18,22 @@ type PublicTimelineRequestBody struct {
 
 func getPublicTimeline(c *fiber.Ctx) error {
 	var reqBody PublicTimelineRequestBody
-	if err := c.BodyParser(&reqBody); err != nil {
+	if err := c.QueryParser(&reqBody); err != nil {
 		return c.Status(400).JSON(map[string]string{
 			"error": "Invalid request body",
 		})
 	}
 
 	var resp []models.Status
-	if err := db.DB.Last(&resp).Error; err != nil {
+	if err := db.DB.Order("id desc").Limit(reqBody.Limit).Find(&resp).Error; err != nil {
 		return handleDatabaseError(c, err)
 	} else {
+		// temorary hack to set the accounts
+		for i := range resp {
+			resp[i].Account = &models.Account{
+				ID: 1,
+			}
+		}
 		return c.Status(200).JSON(resp)
 	}
 }
@@ -62,9 +68,16 @@ func getHomeTimeline(c *fiber.Ctx) error {
 	}
 
 	var resp []models.Status
-	if err := db.DB.Last(&resp).Error; err != nil {
+
+	// Get last 20 records from the database
+
+	if err := db.DB.Order("id desc").Limit(reqBody.Limit).Find(&resp).Error; err != nil {
 		return handleDatabaseError(c, err)
 	} else {
+		// temorary hack to set the accounts
+		for i := range resp {
+			resp[i].Account = &models.Account{ID: 1}
+		}
 		return c.Status(200).JSON(resp)
 	}
 }

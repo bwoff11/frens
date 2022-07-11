@@ -9,3 +9,11 @@ timeline:
 jwt_secret: "supersecret"
 
 # Load JWT Secert from env vars, if not load here
+
+database:
+  host: "localhost"
+  port: 3306
+  user: "root"
+  password: "root"
+  database: "instagram"
+  verbose: true # Connect to db.LogMode in db package

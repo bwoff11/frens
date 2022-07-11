@@ -17,35 +17,35 @@ const (
 
 type Status struct {
 	gorm.Model
-	ID                 uint64    `gorm:"primary_key"`
-	CreatedAt          time.Time `json:"created_at"`
-	UpdatedAt          time.Time `json:"updated_at"`
-	DeletedAt          time.Time `json:"deleted_at"`
-	Content            string    `json:"content"`
-	SpoilerText        string    `json:"spoiler_text"`
-	Language           string    `json:"language"`
-	Text               string    `json:"text"`
-	URL                string    `json:"url"`
-	InReplyToID        string    `json:"in_reply_to_id"`
-	InReplyToAccountID string    `json:"in_reply_to_account_id"`
+	ID                 *uint64    `json:"id"`
+	CreatedAt          *time.Time `json:"created_at"`
+	UpdatedAt          time.Time  `json:"updated_at"`
+	Content            string     `json:"content"`
+	SpoilerText        string     `json:"spoiler_text"`
+	Language           string     `json:"language"`
+	Text               string     `json:"text"`
+	URL                string     `json:"url"`
+	InReplyToID        string     `json:"in_reply_to_id"`
+	InReplyToAccountID string     `json:"in_reply_to_account_id"`
 
-	//Visibility         Visibility  `json:"visibility"`
-	//Application        Application `gorm:"foreignkey:ApplicationID" json:"application"`
+	Visibility Visibility
+	//Application Application
 	AccountID uint64   `json:"-"`
-	Account   *Account `gorm:"foreignkey:AccountID" json:"account"`
+	Account   *Account `json:"account"`
 
-	//MediaAttachments []Attachment `json:"media_attachments"`
-	//Mentions []Mention `json:"mentions"`
-	//Tags     []Tag     `json:"tags"`
-	//Emojis   []Emoji   `json:"emojis"`
+	//MediaAttachmentsIDs []uint64      `json:"-"`
+	//MediaAttachments    []*Attachment `gorm:"has_many:media_attachments"`
+	//Mentions            []Mention    `gorm:"has_many:mentions"`
+	//Tags                []Tag        `gorm:"has_many:tags"`
+	//Emojis              []Emoji      `gorm:"has_many:emojis"`
 
-	//Reblog             *Status `json:"reblog"`
-	//Poll               *Poll   `json:"poll"`
-	//Card               *Card   `json:"card"`
+	//Reblog *Status
+	//Poll   *Poll
+	//Card   *Card
 
-	//ReblogsCount   int `json:"reblogs_count"`
-	//FavoritesCount int `json:"favourites_count"`
-	//RepliesCount   int `json:"replies_count"`
+	ReblogsCount   int `gorm:"-" json:"reblogs_count"`
+	FavoritesCount int `gorm:"-" json:"favourites_count"`
+	RepliesCount   int `gorm:"-" json:"replies_count"`
 
 	Sensitive  bool `json:"sensitive"`
 	Favourited bool `json:"favourited"`

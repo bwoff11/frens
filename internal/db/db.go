@@ -22,15 +22,23 @@ func Connect() {
 		log.Fatalln(err)
 	}
 
+	DB.Set("gorm:auto_preload", true)
+
 	DB.AutoMigrate(&models.Account{})
-	DB.AutoMigrate(&models.Status{})
-	//DB.AutoMigrate(&models.Field{})
-	//DB.AutoMigrate(&models.Activity{})
-	//DB.AutoMigrate(&models.Emoji{})
-	//DB.AutoMigrate(&models.Source{})
-	DB.AutoMigrate(&models.Hashtag{})
 	DB.AutoMigrate(&models.Application{})
+	DB.AutoMigrate(&models.Attachment{})
+	DB.AutoMigrate(&models.Mention{})
+	DB.AutoMigrate(&models.Tag{})
+	DB.AutoMigrate(&models.Status{})
+	DB.AutoMigrate(&models.Field{})
+	DB.AutoMigrate(&models.Activity{})
+	DB.AutoMigrate(&models.Emoji{})
+	DB.AutoMigrate(&models.Source{})
+	DB.AutoMigrate(&models.Hashtag{})
 	DB.AutoMigrate(&models.OAuthApplication{})
+
+	DB.Preload("Account").Find(&models.Status{})
+
 }
 
 func HashPassword(password string) string {
