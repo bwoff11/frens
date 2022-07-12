@@ -1,10 +1,15 @@
 package client
 
 import (
+	"encoding/binary"
+	"errors"
 	"log"
+	"math/rand"
+	"time"
 
 	"github.com/bwoff11/frens/internal/db"
 	"github.com/bwoff11/frens/internal/models"
+	badger "github.com/dgraph-io/badger/v3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -42,7 +47,6 @@ func getLoginPage(c *fiber.Ctx) error {
 
 	// Return login form
 	return c.Render("./public/login.html", req)
-	//return c.Status(200).SendFile("./public/login.html")
 }
 
 // After the user provides a username and password, it is checked against the db.
@@ -51,13 +55,41 @@ func getLoginPage(c *fiber.Ctx) error {
 func login(c *fiber.Ctx) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
+	// Client should encrypt the password before sending it.
+	// As a temporary solution, we will just hash it here
+	password = db.Sha256(password)
 
-	// Check if username and password are correct
-	if err := db.DB.Select("id").Where("username = ? AND password = ?", username, password).First(&models.Account{}).Error; err != nil {
+	// Find matching account in db
+	var account models.Account
+	if err := db.Postgres.Where("username = ? AND password = ?", username, password).First(&account).Error; err != nil {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
-	return c.Redirect("http://localhost:4002/settings/instances/add?code=tFwEduJ4Act2PTmZ0osjp175WX-dfrOxO_H7W20-9rU")
+	// Generate authorization code
+	rand.Seed(time.Now().UnixNano())
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	codeRunes := make([]rune, 32)
+	for i := range codeRunes {
+		codeRunes[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	codeString := string(codeRunes)
+	codeBytes := []byte(codeString)
+
+	log.Println("AccountID:", account.ID)
+	log.Println("Testing code:", codeString)
+	// Store code to id map in cache
+	accountIDBytes := make([]byte, 8)
+	binary.LittleEndian.PutUint64(accountIDBytes, uint64(account.ID))
+	db.Badger.Update(func(txn *badger.Txn) error {
+		if err := txn.Set(codeBytes, accountIDBytes); err != nil {
+			log.Println(err)
+			return err
+		}
+		return nil
+	})
+
+	// Return redirect URL
+	return c.Redirect("http://localhost:4002/settings/instances/add?code=" + codeString)
 }
 
 func loginStyle(c *fiber.Ctx) error {
@@ -91,10 +123,40 @@ type GetTokenRespone struct {
 // The client sends the application data we returned in the application registration form.
 // Here, we use that information to generate a access token.
 func getToken(c *fiber.Ctx) error {
+	var reqBody GetTokenRequest
+	if err := c.BodyParser(&reqBody); err != nil {
+		return err
+	}
+
+	//validate here
+
+	if reqBody.Code == "" {
+		return c.SendStatus(fiber.StatusBadRequest)
+	} else {
+		log.Println("Code:", reqBody.Code)
+	}
+
+	// Lookup code in cache
+	var accountIDBytes = make([]byte, 8)
+	db.Badger.View(func(txn *badger.Txn) error {
+		res, err := txn.Get([]byte(reqBody.Code))
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			return errors.New("Code not found")
+		}
+		res.ValueCopy(accountIDBytes)
+		return nil
+	})
+	accountID := binary.LittleEndian.Uint64(accountIDBytes)
+	if accountID == 0 {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
 
 	// Create the Claims
 	claims := jwt.MapClaims{
-		"account_id": "12345",
+		"account_id": accountID,
 	}
 
 	// Create token

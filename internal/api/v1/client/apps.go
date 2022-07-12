@@ -16,7 +16,15 @@ type CreateAppRequest struct {
 	Website      string `json:"website"`       // A URL to the homepage of your app
 }
 
+func addApplicationRoutes(app *fiber.App) {
+	aps := app.Group("/api/v1/apps")                     // Apps
+	aps.Post("/", createApp)                             // /api/v1/apps/ POST
+	aps.Get("/verify_credentials", verifyAppCredentials) // /api/v1/apps/verify_credentials GET
+}
+
 // Create a new application to obtain OAuth2 credentials.
+// The application then makes a POST request to /api/v1/apps to obtain an OAuth2 "app" token.
+// See: https://docs.joinmastodon.org/client/token/
 func createApp(c *fiber.Ctx) error {
 
 	// Parse the request body
@@ -41,7 +49,7 @@ func createApp(c *fiber.Ctx) error {
 	}
 
 	// Store full application in database
-	if err := db.DB.Create(&newApp).Error; err != nil {
+	if err := db.Postgres.Create(&newApp).Error; err != nil {
 		return c.Status(500).JSON(map[string]string{
 			"error": "Internal server error",
 		})
@@ -55,8 +63,8 @@ func createApp(c *fiber.Ctx) error {
 		UserID: "",
 	}
 
-	// Store oauth2 application in database
-	if err := db.DB.Create(&newOAuthApp).Error; err != nil {
+	// Store application in database
+	if err := db.Postgres.Create(&newOAuthApp).Error; err != nil {
 		return c.Status(500).JSON(map[string]string{
 			"error": "Internal server error",
 		})

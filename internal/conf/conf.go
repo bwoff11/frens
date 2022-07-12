@@ -25,6 +25,8 @@ func init() {
 		panic(err)
 	}
 
+	config.JWTSecret = "secret" //Workaround
+
 	log.Println("Config:", config.JWTSecret)
 
 	log.Println("Config loaded")

@@ -14,6 +14,13 @@ type Instance struct {
 	Email            string `json:"email"`             // An email that may be contacted for any inquiries.
 }
 
+func addInstanceRoutes(app *fiber.App) {
+	ins := app.Group("/api/v1/instance")      // Instances
+	ins.Get("/", getInstance)                 // /api/v1/instances GET
+	ins.Get("/peers", getPeers)               // /api/v1/instances/peers GET
+	ins.Get("/activity", getInstanceActivity) // /api/v1/instances/activity GET
+}
+
 func getInstance(c *fiber.Ctx) error {
 	instance := Instance{
 		URI:              "https://example.com",

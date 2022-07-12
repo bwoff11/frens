@@ -4,11 +4,19 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	jwtware "github.com/gofiber/jwt/v3"
 	"gorm.io/gorm"
 )
 
 func AddRoutes(app *fiber.App) {
 	addOAuthRoutes(app)
+	addApplicationRoutes(app)
+	addInstanceRoutes(app)
+
+	app.Use(jwtware.New(jwtware.Config{
+		SigningKey: []byte("secret"),
+	}))
+
 	addStatusRoutes(app)
 	addAccountRoutes(app)
 
@@ -37,10 +45,6 @@ func AddRoutes(app *fiber.App) {
 	ann.Post("/:id/dismiss", dismissAnnouncement)             // /api/v1/announcements/:id/dismiss POST
 	ann.Put("/:id/reactions/:name", reactToAnnouncement)      // /api/v1/announcements/:id/reactions/:name PUT
 	ann.Delete("/:id/reactions/:name", unreactToAnnouncement) // /api/v1/announcements/:id/reactions/:name DELETE
-
-	aps := v1.Group("/apps")                             // Apps
-	aps.Post("/", createApp)                             // /api/v1/apps/ POST
-	aps.Get("/verify_credentials", verifyAppCredentials) // /api/v1/apps/verify_credentials GET
 
 	bkm := v1.Group("/bookmarks")  // Bookmarks
 	bkm.Get("/", GetSelfBookmarks) // /api/v1/bookmarks GET
@@ -126,11 +130,6 @@ func AddRoutes(app *fiber.App) {
 	sug := v1.Group("/suggestions")      // Suggestions
 	sug.Get("/", GetSuggestions)         // /api/v1/suggestions/ GET
 	sug.Delete("/:id", DeleteSuggestion) // /api/v1/suggestions/:id DELETE
-
-	ins := v1.Group("/instance")              // Instances
-	ins.Get("/", getInstance)                 // /api/v1/instances GET
-	ins.Get("/peers", getPeers)               // /api/v1/instances/peers GET
-	ins.Get("/activity", getInstanceActivity) // /api/v1/instances/activity GET
 
 	tml := v1.Group("/timelines")                // Timelines
 	tml.Get("/public", getPublicTimeline)        // /api/v1/timelines/public GET

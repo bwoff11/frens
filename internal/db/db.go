@@ -6,57 +6,71 @@ import (
 	"log"
 
 	"github.com/bwoff11/frens/internal/models"
+	badger "github.com/dgraph-io/badger/v3"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var Postgres *gorm.DB
+var Badger *badger.DB
 
 func Connect() {
+	connectToPostgresql()
+	connectToBadger()
+}
+
+func connectToPostgresql() {
 	dbURL := "postgres://test:test@localhost:5432/frens"
 
 	var err error
-	DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
+	Postgres, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	DB.Set("gorm:auto_preload", true)
+	Postgres.Set("gorm:auto_preload", true)
 
-	DB.AutoMigrate(&models.Account{})
-	DB.AutoMigrate(&models.Application{})
-	DB.AutoMigrate(&models.Attachment{})
-	DB.AutoMigrate(&models.Mention{})
-	DB.AutoMigrate(&models.Tag{})
-	DB.AutoMigrate(&models.Status{})
-	DB.AutoMigrate(&models.Field{})
-	DB.AutoMigrate(&models.Activity{})
-	DB.AutoMigrate(&models.Emoji{})
-	DB.AutoMigrate(&models.Source{})
-	DB.AutoMigrate(&models.Hashtag{})
-	DB.AutoMigrate(&models.OAuthApplication{})
+	Postgres.AutoMigrate(&models.Account{})
+	Postgres.AutoMigrate(&models.Application{})
+	Postgres.AutoMigrate(&models.Attachment{})
+	Postgres.AutoMigrate(&models.Mention{})
+	Postgres.AutoMigrate(&models.Tag{})
+	Postgres.AutoMigrate(&models.Status{})
+	Postgres.AutoMigrate(&models.Field{})
+	Postgres.AutoMigrate(&models.Activity{})
+	Postgres.AutoMigrate(&models.Emoji{})
+	Postgres.AutoMigrate(&models.Source{})
+	Postgres.AutoMigrate(&models.Hashtag{})
+	Postgres.AutoMigrate(&models.OAuthApplication{})
 
-	DB.Preload("Account").Find(&models.Status{})
-
+	Postgres.Preload("Account").Find(&models.Status{})
 }
 
-func HashPassword(password string) string {
+func connectToBadger() {
+	var err error
+	Badger, err = badger.Open(badger.DefaultOptions("").WithInMemory(true))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func Sha256(password string) string {
 	data := []byte(password)
 	encrypted := fmt.Sprintf("%x", sha256.Sum256(data))
 	return encrypted
 }
 
 func AddAccount(account *models.Account) {
-	DB.Create(account)
+	Postgres.Create(account)
 }
 
 func DeleteAccount(account *models.Account) {
-	DB.Delete(account)
+	Postgres.Delete(account)
 }
 
 func GetAccountFollowingIDs(id *int64) []int64 {
 	var following []int64
-	DB.Model(&models.Account{}).Where("id = ?", id).Pluck("following", &following)
+	Postgres.Model(&models.Account{}).Where("id = ?", id).Pluck("following", &following)
 	return following
 }

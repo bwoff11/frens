@@ -54,7 +54,7 @@ func createAccount(c *fiber.Ctx) error {
 	}
 
 	password := reqBody.Password
-	hashedPassword := db.HashPassword(password)
+	hashedPassword := db.Sha256(password)
 	log.Println(password)
 	log.Println(hashedPassword)
 
@@ -75,10 +75,10 @@ func createAccount(c *fiber.Ctx) error {
 		Bot:           false,
 		Suspended:     false,
 		MuteExpiresAt: time.Now(),
-		Password:      db.HashPassword(reqBody.Password),
+		Password:      db.Sha256(reqBody.Password),
 	}
 
-	if err := db.DB.Create(newAccount).Error; err != nil {
+	if err := db.Postgres.Create(newAccount).Error; err != nil {
 		return handleDatabaseError(c, err)
 	} else {
 		return c.Status(fiber.StatusCreated).SendString("Account created")
@@ -105,7 +105,7 @@ func getUserInfo(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var account models.Account
-	if err := db.DB.Where("id = ?", id).First(&account).Error; err != nil {
+	if err := db.Postgres.Where("id = ?", id).First(&account).Error; err != nil {
 		return handleDatabaseError(c, err)
 	} else {
 		return c.JSON(account)
@@ -116,7 +116,7 @@ func getUserStatuses(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var statuses []models.Status
-	if err := db.DB.Where("account_id = ?", id).Find(&statuses).Error; err != nil {
+	if err := db.Postgres.Where("account_id = ?", id).Find(&statuses).Error; err != nil {
 		return handleDatabaseError(c, err)
 	} else {
 		return c.JSON(statuses)

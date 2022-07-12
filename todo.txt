@@ -32,5 +32,10 @@ app flow:
 add db salt in config which effects hash
 
 
-
 When registering an application using Mastodon's REST API, there is a redirect_uris parameter. When interfacing with OAuth endpoints, you must use the redirect_uri parameter instead, and this parameter's value must be one of the redirect_uris registered with the app.
+
+
+Add config to allow for cache (badgerdb) to be ran in eaither persistant or ephemeral mode
+Add config to allow for stoage to eaither be local or s3
+
+enable encrpytion and size (from config) on badgerdb

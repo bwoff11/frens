@@ -52,18 +52,18 @@ func search(c *fiber.Ctx) error {
 
 func searchAccounts(req SearchRequest, resp *SearchResponse) {
 	var foundAccounts []models.Account
-	db.DB.Where("username = ?", req.Q).Find(&foundAccounts)
+	db.Postgres.Where("username = ?", req.Q).Find(&foundAccounts)
 	resp.Accounts = foundAccounts
 }
 
 func searchStatuses(req SearchRequest, resp *SearchResponse) {
 	var foundStatuses []models.Status
-	db.DB.Where("content = ?", req.Q).Find(&foundStatuses)
+	db.Postgres.Where("content = ?", req.Q).Find(&foundStatuses)
 	resp.Statuses = foundStatuses
 }
 
 func searchHashtags(req SearchRequest, resp *SearchResponse) {
 	var foundHashtags []models.Hashtag
-	db.DB.Where("id = ?", req.Q).Find(&foundHashtags)
+	db.Postgres.Where("id = ?", req.Q).Find(&foundHashtags)
 	resp.Hashtags = foundHashtags
 }

@@ -68,7 +68,7 @@ func createStatus(c *fiber.Ctx) error {
 	}
 
 	// validate here
-	if err := db.DB.Create(newStatus).Error; err != nil {
+	if err := db.Postgres.Create(newStatus).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Error creating status")
 	} else {
 		return c.Status(200).JSON(newStatus)
@@ -79,7 +79,7 @@ func getStatus(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var status models.Status
-	if err := db.DB.Where("id = ?", id).First(&status).Error; err != nil {
+	if err := db.Postgres.Where("id = ?", id).First(&status).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).SendString("Status not found")
 	} else {
 		return c.Status(200).JSON(&status)
