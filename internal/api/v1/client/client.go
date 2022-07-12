@@ -13,6 +13,8 @@ func AddRoutes(app *fiber.App) {
 	addApplicationRoutes(app)
 	addInstanceRoutes(app)
 
+	app.Post("/api/v1/accounts", createAccount) // /api/v1/accounts POST
+
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey: []byte("secret"),
 	}))

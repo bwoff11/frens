@@ -1,8 +1,11 @@
 package client
 
 import (
+	"log"
+
 	"github.com/bwoff11/frens/internal/db"
 	"github.com/bwoff11/frens/internal/models"
+	"github.com/bwoff11/frens/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -38,6 +41,12 @@ func createStatus(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
 	}
 
+	accountID, err := utils.GetAccountID(c)
+	if err != nil {
+		log.Println("Error getting account ID:", err)
+		return c.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
+	}
+
 	var newStatus = &models.Status{
 		Content: reqBody.Status,
 		//Visibility:  models.VisibilityPublic,
@@ -64,7 +73,7 @@ func createStatus(c *fiber.Ctx) error {
 		Muted:      false,
 		Bookmarked: false,
 		Pinned:     false,
-		AccountID:  1,
+		AccountID:  *accountID,
 	}
 
 	// validate here

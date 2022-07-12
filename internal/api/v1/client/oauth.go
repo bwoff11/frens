@@ -173,6 +173,7 @@ func getToken(c *fiber.Ctx) error {
 		Scope:       "read",
 		CreatedAt:   1579098983,
 	}
+	log.Println("Token:", t)
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 

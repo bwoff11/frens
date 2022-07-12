@@ -6,12 +6,12 @@ import (
 
 	"github.com/bwoff11/frens/internal/db"
 	"github.com/bwoff11/frens/internal/models"
+	"github.com/bwoff11/frens/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
 func addAccountRoutes(app *fiber.App) {
 	acc := app.Group("/api/v1/accounts")                // Accounts
-	acc.Post("/", createAccount)                        // /api/v1/accounts POST
 	acc.Get("/verify_credentials", verifyCredentials)   // /api/v1/accounts/verify_credentials GET
 	acc.Patch("/update_credentials", updateCredentials) // /api/v1/accounts/update_credentials PATCH
 	acc.Get("/:id", getUserInfo)                        // /api/v1/accounts/:id GET
@@ -86,7 +86,16 @@ func createAccount(c *fiber.Ctx) error {
 }
 
 func verifyCredentials(c *fiber.Ctx) error {
-	return c.Status(200).SendString("Not implemented")
+	accountID, err := utils.GetAccountID(c)
+	if err != nil {
+		return err
+	}
+	var Account models.Account
+	if err := db.Postgres.Where("id = ?", accountID).First(&Account).Error; err != nil {
+		return handleDatabaseError(c, err)
+	} else {
+		return c.JSON(Account)
+	}
 }
 
 func updateCredentials(c *fiber.Ctx) error {

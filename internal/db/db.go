@@ -31,18 +31,21 @@ func connectToPostgresql() {
 
 	Postgres.Set("gorm:auto_preload", true)
 
-	Postgres.AutoMigrate(&models.Account{})
-	Postgres.AutoMigrate(&models.Application{})
-	Postgres.AutoMigrate(&models.Attachment{})
-	Postgres.AutoMigrate(&models.Mention{})
-	Postgres.AutoMigrate(&models.Tag{})
-	Postgres.AutoMigrate(&models.Status{})
-	Postgres.AutoMigrate(&models.Field{})
-	Postgres.AutoMigrate(&models.Activity{})
-	Postgres.AutoMigrate(&models.Emoji{})
-	Postgres.AutoMigrate(&models.Source{})
-	Postgres.AutoMigrate(&models.Hashtag{})
-	Postgres.AutoMigrate(&models.OAuthApplication{})
+	Postgres.AutoMigrate(
+		&models.Account{},
+		&models.Application{},
+		&models.OAuthApplication{},
+		&models.Mention{},
+		&models.Activity{},
+		&models.Follow{},
+		&models.Status{},
+		&models.Field{},
+		&models.Attachment{},
+		&models.Emoji{},
+		&models.Tag{},
+		&models.Source{},
+		&models.Hashtag{},
+	)
 
 	Postgres.Preload("Account").Find(&models.Status{})
 }

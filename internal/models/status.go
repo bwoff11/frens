@@ -30,8 +30,8 @@ type Status struct {
 
 	Visibility Visibility
 	//Application Application
-	AccountID uint64   `json:"-"`
-	Account   *Account `json:"account"`
+	AccountID uint64  `json:"-"`
+	Account   Account `json:"account"`
 
 	//MediaAttachmentsIDs []uint64      `json:"-"`
 	//MediaAttachments    []*Attachment `gorm:"has_many:media_attachments"`

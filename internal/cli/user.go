@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"time"
-
 	"github.com/bwoff11/frens/internal/db"
 	"github.com/bwoff11/frens/internal/models"
 	"github.com/spf13/cobra"
@@ -30,28 +28,30 @@ var addCmd = &cobra.Command{
 		db.Connect()
 
 		newAccount := models.Account{
-			Username:       "username2",
-			Acct:           "accountname2",
-			URL:            "https://example.com",
-			DisplayName:    "Display Name",
-			Note:           "Note",
-			Avatar:         "https://example.com/avatar.png",
-			AvatarStatic:   "https://example.com/avatar.png",
-			Header:         "https://example.com/header.png",
-			HeaderStatic:   "https://example.com/header.png",
-			Locked:         false,
-			Discoverable:   true,
-			CreatedAt:      time.Now(),
-			LastStatusAt:   time.Now(),
-			StatusCount:    0,
-			FollowersCount: 0,
-			FollowingCount: 0,
-			// Moved:          false,
-			// Fields:         []models.Field{},
-			Bot: false,
-			// Source:        models.Source{},
-			Suspended:     false,
-			MuteExpiresAt: time.Now(),
+			/*
+				Username:     "username2",
+				Acct:         "accountname2",
+				URL:          "https://example.com",
+				DisplayName:  "Display Name",
+				Note:         "Note",
+				Avatar:       "https://example.com/avatar.png",
+				AvatarStatic: "https://example.com/avatar.png",
+				Header:       "https://example.com/header.png",
+				HeaderStatic: "https://example.com/header.png",
+				Locked:       false,
+				Discoverable: true,
+				CreatedAt:    time.Now(),
+				LastStatusAt: time.Now(),
+				StatusCount:  0,
+				//FollowersCount: 0,
+				//FollowingCount: 0,
+				// Moved:          false,
+				// Fields:         []models.Field{},
+				Bot: false,
+				// Source:        models.Source{},
+				Suspended:     false,
+				MuteExpiresAt: time.Now(),
+			*/
 		}
 		db.AddAccount(&newAccount)
 	},
