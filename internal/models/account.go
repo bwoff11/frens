@@ -2,12 +2,9 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Account struct {
-	gorm.Model
 	ID            uint64    `gorm:"primary_key" json:"id,omitempty"`   // The account idheader.
 	Username      string    `gorm:";unique" json:"username,omitempty"` // The username of the account, not including domain.
 	Acct          string    `gorm:";unique" json:"acct,omitempty"`     // The Webfinger account URI. Equal to username for local users, or username@domain for remote users.

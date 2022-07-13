@@ -24,6 +24,7 @@ func addApplicationRoutes(app *fiber.App) {
 
 // Create a new application to obtain OAuth2 credentials.
 // The application then makes a POST request to /api/v1/apps to obtain an OAuth2 "app" token.
+// Null scope defaults to read.
 // See: https://docs.joinmastodon.org/client/token/
 func createApp(c *fiber.Ctx) error {
 
@@ -35,8 +36,12 @@ func createApp(c *fiber.Ctx) error {
 		})
 	}
 
+	// Check scope for value and default to read if not provided
+	if req.Scopes == "" {
+		req.Scopes = "read"
+	}
+
 	// Validate here
-	// Be sure to add defaul values for scope (read) at some point
 
 	// Create a full application object
 	newApp := models.Application{
@@ -55,33 +60,8 @@ func createApp(c *fiber.Ctx) error {
 		})
 	}
 
-	// Create a oauth2 compatible application
-	newOAuthApp := models.OAuthApplication{
-		ID:     newApp.ClientID,
-		Secret: newApp.ClientSecret,
-		Domain: req.Website,
-		UserID: "",
-	}
-
-	// Store application in database
-	if err := db.Postgres.Create(&newOAuthApp).Error; err != nil {
-		return c.Status(500).JSON(map[string]string{
-			"error": "Internal server error",
-		})
-	}
-
-	// Create a version of the application that is safe to return to the client
-	newAppResponse := models.ApplicationResponse{
-		ID:           newApp.ClientID,
-		Name:         newApp.Name,
-		Website:      newApp.Website,
-		RedirectURIs: newApp.RedirectURIs,
-		ClientID:     newApp.ClientID,
-		ClientSecret: newApp.ClientSecret,
-	}
-
 	// Return the application to the client
-	return c.Status(200).JSON(newAppResponse)
+	return c.Status(200).JSON(newApp)
 }
 
 // Confirm that the app's OAuth2 credentials work.

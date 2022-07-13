@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	jwtware "github.com/gofiber/jwt/v3"
 	"gorm.io/gorm"
 )
 
@@ -15,9 +14,9 @@ func AddRoutes(app *fiber.App) {
 
 	app.Post("/api/v1/accounts", createAccount) // /api/v1/accounts POST
 
-	app.Use(jwtware.New(jwtware.Config{
-		SigningKey: []byte("secret"),
-	}))
+	//app.Use(jwtware.New(jwtware.Config{
+	//	SigningKey: []byte("secret"),
+	//}))
 
 	addStatusRoutes(app)
 	addAccountRoutes(app)
