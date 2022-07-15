@@ -20,7 +20,7 @@ func Connect() {
 }
 
 func connectToPostgresql() {
-	dbURL := "postgres://test:test@localhost:5432/frens"
+	dbURL := "postgres://test:test@localhost:5432/postgres"
 
 	var err error
 	Postgres, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
@@ -34,10 +34,8 @@ func connectToPostgresql() {
 	Postgres.AutoMigrate(
 		&models.Account{},
 		&models.Application{},
-		&models.OAuthApplication{},
 		&models.Mention{},
 		&models.Activity{},
-		&models.Follow{},
 		&models.Status{},
 		&models.Field{},
 		&models.Attachment{},
@@ -48,11 +46,14 @@ func connectToPostgresql() {
 	)
 
 	Postgres.Preload("Account").Find(&models.Status{})
+	//Postgres.Preload("Status").Find(&models.Account{})
 }
 
 func connectToBadger() {
+	ops := badger.DefaultOptions("")
+	ops.Logger = nil
 	var err error
-	Badger, err = badger.Open(badger.DefaultOptions("").WithInMemory(true))
+	Badger, err = badger.Open(ops.WithInMemory(true))
 	if err != nil {
 		log.Fatal(err)
 	}

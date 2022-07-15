@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Visibility string
@@ -16,10 +14,10 @@ const (
 )
 
 type Status struct {
-	gorm.Model
-	ID                 *uint64    `json:"id"`
-	CreatedAt          *time.Time `json:"created_at"`
-	UpdatedAt          time.Time  `json:"updated_at"`
+	ID                 int        `json:"id"`
+	CreatedAt          time.Time  `json:"created_at"`
+	UpdatedAt          *time.Time `json:"updated_at"`
+	DeletedAt          *time.Time `json:"deleted_at"`
 	Content            string     `json:"content"`
 	SpoilerText        string     `json:"spoiler_text"`
 	Language           string     `json:"language"`
@@ -28,9 +26,9 @@ type Status struct {
 	InReplyToID        string     `json:"in_reply_to_id"`
 	InReplyToAccountID string     `json:"in_reply_to_account_id"`
 
-	Visibility Visibility
+	Visibility Visibility `json:"visibility"`
 	//Application Application
-	AccountID uint64  `json:"-"`
+	AccountID int     `json:"-"`
 	Account   Account `json:"account"`
 
 	//MediaAttachmentsIDs []uint64      `json:"-"`

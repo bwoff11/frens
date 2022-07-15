@@ -39,3 +39,8 @@ Add config to allow for cache (badgerdb) to be ran in eaither persistant or ephe
 Add config to allow for stoage to eaither be local or s3
 
 enable encrpytion and size (from config) on badgerdb
+
+add reconciler
+
+
+rewrite api routes and add compatability layer

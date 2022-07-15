@@ -1,4 +1,4 @@
-package conf
+package config
 
 import (
 	"log"
@@ -10,7 +10,9 @@ type Configuration struct {
 	JWTSecret string `mapstructure:"jwt_secret"`
 }
 
-var config *Configuration
+var config *Configuration = &Configuration{
+	JWTSecret: "supersecret",
+}
 
 func init() {
 	viper.SetConfigName("config") // name of config file (without extension)

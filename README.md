@@ -1,5 +1,10 @@
 # Frens
 
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
+
+[![Go](https://img.shields.io/badge/--00ADD8?logo=go&logoColor=ffffff)](https://golang.org/)
+
+
 Frens is an open source social networking server, similar to [Mastodon](https://github.com/mastodon/mastodon), [Plemora](https://github.com/Hostdon/pleroma), and [GoToSocial](https://github.com/superseriousbusiness/gotosocial).
 
 We plan to implement the [ActivityPub](https://activitypub.rocks/) standard, allowing cross-communicative federation with other social networks.

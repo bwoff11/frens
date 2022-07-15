@@ -2,17 +2,15 @@ package router
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 
-	v1 "github.com/bwoff11/frens/internal/api/v1"
-	v2 "github.com/bwoff11/frens/internal/api/v2"
+	"github.com/bwoff11/frens/internal/api"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func Execute() {
+func Create() *fiber.App {
 	app := fiber.New(fiber.Config{
 		Prefork:                      false,
 		ServerHeader:                 "Frens",
@@ -53,10 +51,14 @@ func Execute() {
 
 	addStaticRoutes(app)
 	addMiddleware(app)
-	v1.AddRoutes(app)
-	v2.AddRoutes(app)
+	api.AddRoutes(app)
 
-	log.Fatal(app.Listen(":4000"))
+	return app
+}
+
+func Start() {
+	app := Create()
+	app.Listen(":4000")
 }
 
 func addStaticRoutes(app *fiber.App) {

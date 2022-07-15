@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Long:  `Frens is a federated social network server written in Go.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		db.Connect()
-		router.Execute()
+		router.Start()
 	},
 }
 

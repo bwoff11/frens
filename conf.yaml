@@ -2,11 +2,24 @@
 
 
 auto_like_own_posts: true
+default_avatar: https://i.kym-cdn.com/entries/icons/facebook/000/021/523/apu_apustaja_kym.jpg
 
 timeline:
   sort_method: [chronological, smart]
 
-jwt_secret: "supersecret"
+
+compatibility:
+  mastodon: true
+  plemora: true
+
+cache:
+  mode: [memory, file]
+  path: cache/
+  max_size: 100
+  max_age: 3600
+
+security:
+  jwt_secret: "supersecret"
 
 # Load JWT Secert from env vars, if not load here
 
@@ -16,4 +29,4 @@ database:
   user: "root"
   password: "root"
   database: "instagram"
-  verbose: true # Connect to db.LogMode in db package
+  debug_logging: true # Connect to db.LogMode in db package
