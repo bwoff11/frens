@@ -40,10 +40,15 @@ func connectToPostgresql() {
 		&models.Field{},
 		&models.Attachment{},
 		&models.Emoji{},
+		&models.Reblog{},
+		&models.Poll{},
+		&models.Card{},
 		&models.Tag{},
 		&models.Source{},
 		&models.Hashtag{},
 	)
+
+	log.Println("Finished migrating models")
 
 	Postgres.Preload("Account").Find(&models.Status{})
 	//Postgres.Preload("Status").Find(&models.Account{})

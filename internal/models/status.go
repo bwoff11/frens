@@ -31,16 +31,19 @@ type Status struct {
 	Application   *Application `json:"application"`
 	AccountID     int          `json:"-"`
 	Account       *Account     `json:"account"`
-
 	//MediaAttachmentsIDs []uint64      `json:"-"`
-	//MediaAttachments    []*Attachment `gorm:"has_many:media_attachments"`
-	//Mentions            []Mention    `gorm:"has_many:mentions"`
+	//MediaAttachments    []*Attachment `json:"media_attachments"`
+	//MendionsIDs []int     `json:"-"`
+	//Mentions    []Mention `json:"mentions"`
 	//Tags                []Tag        `gorm:"has_many:tags"`
 	//Emojis              []Emoji      `gorm:"has_many:emojis"`
 
-	//Reblog *Status
-	//Poll   *Poll
-	//Card   *Card
+	//ReblogID int     `json:"-"`
+	//Reblog   *Status `json:"reblog"`
+	//PollID   int     `json:"-"`
+	//Poll     *Poll   `json:"poll"`
+	//CardID   int     `json:"-"`
+	//Card     *Card   `json:"card"`
 
 	ReblogsCount   int `gorm:"-" json:"reblogs_count"`
 	FavoritesCount int `gorm:"-" json:"favourites_count"`

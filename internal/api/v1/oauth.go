@@ -146,6 +146,7 @@ func GetToken(c *fiber.Ctx) error {
 	// Create the Claims
 	claims := jwt.MapClaims{
 		"account_id": accountID,
+		"client_id":  reqBody.ClientID,
 	}
 
 	// Create token

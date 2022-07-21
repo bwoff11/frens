@@ -34,7 +34,7 @@ func createStatus(c *fiber.Ctx) error {
 		Sensitive:   false,
 		SpoilerText: "",
 		//MediaAttachments:   []models.Attachment{},
-		//Application:        models.Application{},
+		Application: nil,
 		//Mentions:           []models.Mention{},
 		//Tags:               []models.Tag{},
 		//Emojis:             []models.Emoji{},

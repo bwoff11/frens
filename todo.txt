@@ -44,3 +44,5 @@ add reconciler
 
 
 rewrite api routes and add compatability layer
+
+create v3 of /api/v1/apps with proper data objects
