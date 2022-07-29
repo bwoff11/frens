@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/bwoff11/frens/internal/db"
-	"github.com/bwoff11/frens/internal/models"
 	"github.com/bwoff11/frens/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -28,16 +27,16 @@ func createStatus(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
 	}
 
-	var newStatus = &models.Status{
+	var newStatus = &db.Status{
 		Content: reqBody.Status,
-		//Visibility:  models.VisibilityPublic,
+		//Visibility:  db.VisibilityPublic,
 		Sensitive:   false,
 		SpoilerText: "",
-		//MediaAttachments:   []models.Attachment{},
+		//MediaAttachments:   []db.Attachment{},
 		//Application: ,
-		//Mentions:           []models.Mention{},
-		//Tags:               []models.Tag{},
-		//Emojis:             []models.Emoji{},
+		//Mentions:           []db.Mention{},
+		//Tags:               []db.Tag{},
+		//Emojis:             []db.Emoji{},
 		//ReblogsCount:       0,
 		//FavoritesCount:     0,
 		//RepliesCount:       0,
@@ -68,7 +67,7 @@ func createStatus(c *fiber.Ctx) error {
 func getStatus(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	var status models.Status
+	var status db.Status
 	if err := db.Postgres.Where("id = ?", id).First(&status).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).SendString("Status not found")
 	} else {

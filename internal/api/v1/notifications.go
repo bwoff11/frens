@@ -2,7 +2,6 @@ package v1
 
 import (
 	"github.com/bwoff11/frens/internal/db"
-	"github.com/bwoff11/frens/internal/models"
 	"github.com/bwoff11/frens/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -14,7 +13,7 @@ func getSelfNotifications(c *fiber.Ctx) error {
 		return err
 	}
 
-	var notifications []models.Notification
+	var notifications []db.Notification
 	if err := db.Postgres.Find(&notifications, "account_id = ?", id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.SendStatus(200)

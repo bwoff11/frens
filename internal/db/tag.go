@@ -1,4 +1,4 @@
-package models
+package db
 
 type Tag struct {
 	Name string `json:"name"`

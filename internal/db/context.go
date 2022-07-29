@@ -1,4 +1,4 @@
-package models
+package db
 
 type Context struct {
 	Ancestors   []Status `json:"ancestors"`

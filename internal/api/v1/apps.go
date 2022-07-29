@@ -2,7 +2,6 @@ package v1
 
 import (
 	"github.com/bwoff11/frens/internal/db"
-	"github.com/bwoff11/frens/internal/models"
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -39,7 +38,7 @@ func createApp(c *fiber.Ctx) error {
 	}
 
 	// Create a full application object
-	newApp := models.Application{
+	newApp := db.Application{
 		Name:         req.ClientName,
 		Website:      req.Website,
 		RedirectURIs: req.RedirectURIs,

@@ -1,4 +1,4 @@
-package models
+package db
 
 type Source struct {
 	ID                 uint64

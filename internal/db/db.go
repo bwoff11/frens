@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/bwoff11/frens/internal/config"
-	"github.com/bwoff11/frens/internal/models"
 	badger "github.com/dgraph-io/badger/v3"
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
@@ -42,27 +41,27 @@ func connectToPostgresql() {
 	Postgres.Set("gorm:auto_preload", true)
 
 	Postgres.AutoMigrate(
-		&models.Account{},
-		&models.Application{},
-		&models.Mention{},
-		&models.Activity{},
-		&models.Status{},
-		&models.Field{},
-		&models.Attachment{},
-		&models.Emoji{},
-		&models.Reblog{},
-		&models.Poll{},
-		&models.Card{},
-		&models.Tag{},
-		&models.Source{},
-		&models.Hashtag{},
-		&models.Relationship{},
+		&Account{},
+		&Application{},
+		&Mention{},
+		&Activity{},
+		&Status{},
+		&Field{},
+		&Attachment{},
+		&Emoji{},
+		&Reblog{},
+		&Poll{},
+		&Card{},
+		&Tag{},
+		&Source{},
+		&Hashtag{},
+		&Relationship{},
 	)
 
 	logrus.Info("Finished migrating models to Postgresql")
 
-	Postgres.Preload("Account").Find(&models.Status{})
-	//Postgres.Preload("Status").Find(&models.Account{})
+	Postgres.Preload("Account").Find(&Status{})
+	//Postgres.Preload("Status").Find(&Account{})
 
 	logrus.Info("Finished connecting to Postgresql")
 }
@@ -87,16 +86,16 @@ func Sha256(password string) string {
 	return encrypted
 }
 
-func AddAccount(account *models.Account) {
+func AddAccount(account *Account) {
 	Postgres.Create(account)
 }
 
-func DeleteAccount(account *models.Account) {
+func DeleteAccount(account *Account) {
 	Postgres.Delete(account)
 }
 
 func GetAccountFollowingIDs(id *int64) []int64 {
 	var following []int64
-	Postgres.Model(&models.Account{}).Where("id = ?", id).Pluck("following", &following)
+	Postgres.Model(&Account{}).Where("id = ?", id).Pluck("following", &following)
 	return following
 }

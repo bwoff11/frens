@@ -1,4 +1,4 @@
-package models
+package db
 
 type Activity struct {
 	Week          int `json:"week"`

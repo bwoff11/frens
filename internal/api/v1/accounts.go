@@ -1,13 +1,15 @@
 package v1
 
 import (
+	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/bwoff11/frens/internal/db"
-	"github.com/bwoff11/frens/internal/models"
 	"github.com/bwoff11/frens/internal/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type CreateAccountRequestBody struct {
@@ -25,7 +27,7 @@ func CreateAccount(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
 	}
 
-	var newAccount = &models.Account{
+	var newAccount = &db.Account{
 		Username:     reqBody.Username,
 		Acct:         reqBody.Username,
 		DisplayName:  reqBody.Username,
@@ -57,7 +59,7 @@ func VerifyCredentials(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	var Account models.Account
+	var Account db.Account
 	if err := db.Postgres.Where("id = ?", accountID).First(&Account).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to Get account")
 	} else {
@@ -73,8 +75,42 @@ func GetUserFeaturedTags(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
+type GetRelationshipsRequest struct {
+	IDs []int `json:"ids" form:"ids" validate:"required"`
+}
+
 func GetRelationships(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
+	sourceID, err := utils.GetAccountID(c)
+	if err != nil {
+		logrus.Error("Get relationship request failed due to invalid source account ID")
+		return err
+	}
+
+	idsToCheckStr := c.Query("id[]")
+	log.Println(idsToCheckStr)
+	if idsToCheckStr == "" {
+		logrus.Error("Get relationship request failed due to missing IDs to check")
+		return c.Status(fiber.StatusBadRequest).SendString("Missing ids")
+	}
+
+	idsToCheckStrArray := strings.Split(idsToCheckStr, ",")
+	idsToCheck := make([]int, len(idsToCheckStrArray))
+	for i, id := range idsToCheckStrArray {
+		idInt, err := strconv.Atoi(id)
+		if err != nil {
+			logrus.Error("Get relationship request failed due to invalid ID to check")
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid id")
+		}
+		idsToCheck[i] = idInt
+	}
+
+	var resp []db.Relationship
+	if err := db.Postgres.Where("source_account_id = ?", sourceID).Where("target_account_id IN (?)", idsToCheck).Find(&resp).Error; err != nil {
+		logrus.Error("Get relationship request failed due to database error")
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to get relationships")
+	} else {
+		return c.JSON(resp)
+	}
 }
 
 func SearchUsers(c *fiber.Ctx) error {
@@ -84,11 +120,15 @@ func SearchUsers(c *fiber.Ctx) error {
 func GetUserInfo(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	var account models.Account
+	var account db.Account
 	if err := db.Postgres.First(&account, "id = ?", id).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to Get account")
 	} else {
-		return c.JSON(account)
+		if err := account.CalculateCounts(); err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Failed to calculate counts")
+		} else {
+			return c.Status(fiber.StatusOK).JSON(account)
+		}
 	}
 }
 
@@ -98,7 +138,7 @@ func GetUserStatuses(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
 	}
 
-	var statuses []models.Status
+	var statuses []db.Status
 	if err := db.Postgres.Where("account_id = ?", id).Find(&statuses).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to Get statuses")
 	} else {
@@ -107,11 +147,51 @@ func GetUserStatuses(c *fiber.Ctx) error {
 }
 
 func GetUserFollowers(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
+	id := c.Params("id")
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
+	}
+
+	var followerRelationships []db.Relationship
+	if err := db.Postgres.Where("target_account_id = ?", id).Find(&followerRelationships).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to Get followers")
+	}
+
+	var followerIDs []int
+	for _, relationship := range followerRelationships {
+		followerIDs = append(followerIDs, relationship.SourceAccountID)
+	}
+
+	var followers []db.Account
+	if err := db.Postgres.Where("id IN (?)", followerIDs).Find(&followers).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to Get followers")
+	} else {
+		return c.JSON(followers)
+	}
 }
 
 func GetUserFollowing(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
+	id := c.Params("id")
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
+	}
+
+	var followingRelationships []db.Relationship
+	if err := db.Postgres.Where("source_account_id = ?", id).Find(&followingRelationships).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to Get following")
+	}
+
+	var followingIDs []int
+	for _, relationship := range followingRelationships {
+		followingIDs = append(followingIDs, relationship.TargetAccountID)
+	}
+
+	var following []db.Account
+	if err := db.Postgres.Where("id IN (?)", followingIDs).Find(&following).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to Get following")
+	} else {
+		return c.JSON(following)
+	}
 }
 
 func GetUserLists(c *fiber.Ctx) error {
@@ -134,10 +214,10 @@ func FollowUser(c *fiber.Ctx) error {
 	}
 
 	// Try to find prexisting relationship
-	var relationship models.Relationship
+	var relationship db.Relationship
 	if err := db.Postgres.Where("source_account_id = ? AND target_account_id = ?", sourceID, targetID).First(&relationship).Error; err != nil {
 		// Create new relationship
-		relationship = models.Relationship{
+		relationship = db.Relationship{
 			SourceAccountID: *sourceID,
 			TargetAccountID: targetID,
 			Following:       true,

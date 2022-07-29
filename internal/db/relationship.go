@@ -1,4 +1,4 @@
-package models
+package db
 
 type Relationship struct {
 	ID              int `json:"-"`

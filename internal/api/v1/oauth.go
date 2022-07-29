@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/bwoff11/frens/internal/db"
-	"github.com/bwoff11/frens/internal/models"
 	badger "github.com/dgraph-io/badger/v3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
@@ -51,7 +50,7 @@ func Login(c *fiber.Ctx) error {
 	password = db.Sha256(password)
 
 	// Find matching account in db
-	var account models.Account
+	var account db.Account
 	if err := db.Postgres.Where("username = ? AND password = ?", username, password).First(&account).Error; err != nil {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}

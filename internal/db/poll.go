@@ -1,4 +1,4 @@
-package models
+package db
 
 type Poll struct {
 }

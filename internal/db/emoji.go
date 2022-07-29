@@ -1,4 +1,4 @@
-package models
+package db
 
 type Emoji struct {
 	Shortcode       string

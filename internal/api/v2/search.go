@@ -2,7 +2,6 @@ package v2
 
 import (
 	"github.com/bwoff11/frens/internal/db"
-	"github.com/bwoff11/frens/internal/models"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -20,9 +19,9 @@ type SearchRequest struct {
 }
 
 type SearchResponse struct {
-	Accounts []models.Account `json:"accounts"`
-	Statuses []models.Status  `json:"statuses"`
-	Hashtags []models.Hashtag `json:"hashtags"`
+	Accounts []db.Account `json:"accounts"`
+	Statuses []db.Status  `json:"statuses"`
+	Hashtags []db.Hashtag `json:"hashtags"`
 }
 
 func Search(c *fiber.Ctx) error {
@@ -51,19 +50,19 @@ func Search(c *fiber.Ctx) error {
 }
 
 func SearchAccounts(req SearchRequest, resp *SearchResponse) {
-	var foundAccounts []models.Account
+	var foundAccounts []db.Account
 	db.Postgres.Where("username LIKE = ?", "%"+req.Q+"%").Find(&foundAccounts)
 	resp.Accounts = foundAccounts
 }
 
 func SearchStatuses(req SearchRequest, resp *SearchResponse) {
-	var foundStatuses []models.Status
+	var foundStatuses []db.Status
 	db.Postgres.Where("content LIKE = ?", "%"+req.Q+"%").Find(&foundStatuses)
 	resp.Statuses = foundStatuses
 }
 
 func SearchHashtags(req SearchRequest, resp *SearchResponse) {
-	var foundHashtags []models.Hashtag
+	var foundHashtags []db.Hashtag
 	db.Postgres.Where("id LIKE = ?", "%"+req.Q+"%").Find(&foundHashtags)
 	resp.Hashtags = foundHashtags
 }

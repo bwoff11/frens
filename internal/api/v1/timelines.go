@@ -2,9 +2,9 @@ package v1
 
 import (
 	"github.com/bwoff11/frens/internal/db"
-	"github.com/bwoff11/frens/internal/models"
 	"github.com/bwoff11/frens/internal/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type PublicTimelineRequestBody struct {
@@ -25,7 +25,7 @@ func GetPublicTimeline(c *fiber.Ctx) error {
 	//	})
 	//}
 
-	var resp []models.Status
+	var resp []db.Status
 	if err := db.Postgres.Preload("Account").Order("id desc").Limit(20).Find(&resp).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to get public timeline")
 	}
@@ -69,14 +69,16 @@ func GetHomeTimeline(c *fiber.Ctx) error {
 	//}
 
 	// Find relationships
-	var relationships []models.Relationship
+	var relationships []db.Relationship
 	if err := db.Postgres.Where("source_account_id = ? AND following = true", id).Find(&relationships).Error; err != nil {
+		logrus.Errorf("Failed to get relationships for account %d", id)
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to get relationships")
 	}
 
 	// Find statuses
-	var resp []models.Status
+	var resp []db.Status
 	if err := db.Postgres.Preload("Account").Order("id desc").Limit(20).Find(&resp).Error; err != nil {
+		logrus.Errorf("Failed to get statuses for account %d", id)
 		return c.Status(fiber.StatusInternalServerError).SendString("Failed to get home timeline")
 	}
 	return c.Status(200).JSON(resp)

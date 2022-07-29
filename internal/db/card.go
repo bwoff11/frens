@@ -1,4 +1,4 @@
-package models
+package db
 
 // Represents a rich preview card that is generated using OpenGraph tags from a URL.
 type Card struct {

@@ -1,8 +1,6 @@
-package models
+package db
 
-import (
-	"time"
-)
+import "time"
 
 type Account struct {
 	ID           int        `gorm:"primary_key" json:"id"`   // The account idheader.
@@ -26,14 +24,9 @@ type Account struct {
 	LastStatusAt  *time.Time `gorm:"" json:"last_status_at"`  // When the most recent status was posted.
 	MuteExpiresAt *time.Time `gorm:"" json:"mute_expires_at"` // When a timed mute will expire, if applicable.
 
-	//BlockedIDs []int `gorm:"-" json:"blocked_ids"`
-	//BlockingIDs []int `gorm:"-" json:"blocking_ids"`
-	//MutedIDs []int `gorm:"-" json:"muted_ids"`
-	//MutingIDs []int `gorm:"-" json:"muting_ids"`
-
-	//StatusCount   int        `gorm:"-" json:"status_count"`   // How many statuses are attached to this account.
-	//FollowersCount int       `gorm:"-" json:"followers_count"` // The reported followers of this profile.
-	//FollowingCount int       `gorm:"-" json:"following_count"` // The reported follows of this profile.
+	StatusCount    int64 `gorm:"-" json:"status_count"`    // How many statuses are attached to this account.
+	FollowersCount int64 `gorm:"-" json:"followers_count"` // The reported followers of this profile.
+	FollowingCount int64 `gorm:"-" json:"following_count"` // The reported follows of this profile.
 
 	//Moved          Account   `gorm:"" json:"moved"`           // Indicates that the profile is currently inactive and that its user has moved to a new account.
 	//SourceID uint64 `gorm:"" json:"id"`     // The ID of the account that the profile was moved to.
@@ -44,4 +37,17 @@ type Account struct {
 	//Fields []Field `gorm:"" json:"fields"` // Additional metadata attached to a profile as name-value pairs.
 
 	Password string `gorm:"" json:"password"` // The account's password.
+}
+
+func (a *Account) CalculateCounts() error {
+	if err := Postgres.Model(&Status{}).Where("account_id = ?", a.ID).Count(&a.StatusCount).Error; err != nil {
+		return err
+	}
+	if err := Postgres.Model(&Relationship{}).Where("target_account_id = ? AND following = true", a.ID).Count(&a.FollowersCount).Error; err != nil {
+		return err
+	}
+	if err := Postgres.Model(&Relationship{}).Where("source_account_id = ? AND following = true", a.ID).Count(&a.FollowingCount).Error; err != nil {
+		return err
+	}
+	return nil
 }
