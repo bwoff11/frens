@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/bwoff11/frens/internal/db"
@@ -93,6 +94,9 @@ func GetUserInfo(c *fiber.Ctx) error {
 
 func GetUserStatuses(c *fiber.Ctx) error {
 	id := c.Params("id")
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
+	}
 
 	var statuses []models.Status
 	if err := db.Postgres.Where("account_id = ?", id).Find(&statuses).Error; err != nil {
@@ -115,7 +119,45 @@ func GetUserLists(c *fiber.Ctx) error {
 }
 
 func FollowUser(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
+	sourceID, err := utils.GetAccountID(c)
+	if err != nil {
+		return err
+	}
+
+	targetIDStr := c.Params("id")
+	if targetIDStr == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
+	}
+	targetID, err := strconv.Atoi(targetIDStr)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request")
+	}
+
+	// Try to find prexisting relationship
+	var relationship models.Relationship
+	if err := db.Postgres.Where("source_account_id = ? AND target_account_id = ?", sourceID, targetID).First(&relationship).Error; err != nil {
+		// Create new relationship
+		relationship = models.Relationship{
+			SourceAccountID: *sourceID,
+			TargetAccountID: targetID,
+			Following:       true,
+		}
+		if err := db.Postgres.Create(&relationship).Error; err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Failed to create relationship")
+		}
+	} else {
+		// Check if already following
+		if relationship.Following {
+			return c.Status(fiber.StatusBadRequest).SendString("Already following")
+		}
+		// Update existing relationship
+		relationship.Following = true
+		if err := db.Postgres.Save(&relationship).Error; err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Failed to update relationship")
+		}
+	}
+
+	return c.Status(fiber.StatusOK).SendString("Relationship created")
 }
 
 func UnfollowUser(c *fiber.Ctx) error {

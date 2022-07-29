@@ -26,6 +26,11 @@ type Account struct {
 	LastStatusAt  *time.Time `gorm:"" json:"last_status_at"`  // When the most recent status was posted.
 	MuteExpiresAt *time.Time `gorm:"" json:"mute_expires_at"` // When a timed mute will expire, if applicable.
 
+	//BlockedIDs []int `gorm:"-" json:"blocked_ids"`
+	//BlockingIDs []int `gorm:"-" json:"blocking_ids"`
+	//MutedIDs []int `gorm:"-" json:"muted_ids"`
+	//MutingIDs []int `gorm:"-" json:"muting_ids"`
+
 	//StatusCount   int        `gorm:"-" json:"status_count"`   // How many statuses are attached to this account.
 	//FollowersCount int       `gorm:"-" json:"followers_count"` // The reported followers of this profile.
 	//FollowingCount int       `gorm:"-" json:"following_count"` // The reported follows of this profile.

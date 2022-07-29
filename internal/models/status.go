@@ -26,11 +26,11 @@ type Status struct {
 	InReplyToID        string     `json:"in_reply_to_id"`
 	InReplyToAccountID string     `json:"in_reply_to_account_id"`
 
-	Visibility    Visibility   `json:"visibility"`
-	ApplicationID int          `json:"-"`
-	Application   *Application `json:"application"`
-	AccountID     int          `json:"-"`
-	Account       *Account     `json:"account"`
+	Visibility Visibility `json:"visibility"`
+	//ApplicationID int          `json:"-"`
+	//Application   *Application `json:"application"`
+	AccountID int      `json:"-"`
+	Account   *Account `json:"account"`
 	//MediaAttachmentsIDs []uint64      `json:"-"`
 	//MediaAttachments    []*Attachment `json:"media_attachments"`
 	//MendionsIDs []int     `json:"-"`

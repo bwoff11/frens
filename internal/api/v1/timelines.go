@@ -1,10 +1,9 @@
 package v1
 
 import (
-	"log"
-
 	"github.com/bwoff11/frens/internal/db"
 	"github.com/bwoff11/frens/internal/models"
+	"github.com/bwoff11/frens/internal/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -56,6 +55,10 @@ type HomeTimelineRequestBody struct {
 
 // View statuses from followed users.
 func GetHomeTimeline(c *fiber.Ctx) error {
+	id, err := utils.GetAccountID(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
+	}
 
 	// Request body CAN be null, so I need to think about how to handle that.
 	//var reqBody HomeTimelineRequestBody
@@ -65,17 +68,17 @@ func GetHomeTimeline(c *fiber.Ctx) error {
 	//	})
 	//}
 
-	var resp []models.Status
-
-	// Get list of followed accounts
-	// Get statuses of followed accounts
-
-	// if config show self is true, include own posts
-	if err := db.Postgres.Preload("Accounts").Order("id desc").Limit(20).Find(&resp).Error; err != nil {
-		log.Println(err)
-		return c.Status(fiber.StatusInternalServerError).SendString("Failed to get home timeline")
+	// Find relationships
+	var relationships []models.Relationship
+	if err := db.Postgres.Where("source_account_id = ? AND following = true", id).Find(&relationships).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to get relationships")
 	}
 
+	// Find statuses
+	var resp []models.Status
+	if err := db.Postgres.Preload("Account").Order("id desc").Limit(20).Find(&resp).Error; err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("Failed to get home timeline")
+	}
 	return c.Status(200).JSON(resp)
 }
 

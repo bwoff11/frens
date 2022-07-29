@@ -29,6 +29,7 @@ func addStaticRoutes(app *fiber.App) {
 }
 
 func addMiddleware(app *fiber.App) {
+
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
 		AllowHeaders:     "*",
@@ -37,6 +38,7 @@ func addMiddleware(app *fiber.App) {
 		ExposeHeaders:    "",
 		MaxAge:           0,
 	}))
+
 	app.Use(logger.New(logger.Config{
 		//Format:       "method=${method}, uri=${uri}, status=${status}, latency=${latency}, bytes=${bytes}",
 		//TimeFormat:   "2006-01-02 15:04:05",

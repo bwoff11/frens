@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/bwoff11/frens/internal/config"
 	"github.com/bwoff11/frens/internal/models"
 	badger "github.com/dgraph-io/badger/v3"
+	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,12 +17,20 @@ var Postgres *gorm.DB
 var Badger *badger.DB
 
 func Connect() {
+	logrus.Info("Initation database connections")
 	connectToPostgresql()
 	connectToBadger()
 }
 
 func connectToPostgresql() {
-	dbURL := "postgres://test:test@localhost:5432/postgres"
+	logrus.Info("Attempting to connect to Postgresql")
+
+	dbURL := "postgres://" +
+		config.C.Database.User +
+		":" + config.C.Database.Password +
+		"@" + config.C.Database.Host +
+		":" + config.C.Database.Port +
+		"/" + config.C.Database.Database
 
 	var err error
 	Postgres, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
@@ -46,15 +56,20 @@ func connectToPostgresql() {
 		&models.Tag{},
 		&models.Source{},
 		&models.Hashtag{},
+		&models.Relationship{},
 	)
 
-	log.Println("Finished migrating models")
+	logrus.Info("Finished migrating models to Postgresql")
 
 	Postgres.Preload("Account").Find(&models.Status{})
 	//Postgres.Preload("Status").Find(&models.Account{})
+
+	logrus.Info("Finished connecting to Postgresql")
 }
 
 func connectToBadger() {
+	logrus.Info("Attempting to connect to Badger")
+
 	ops := badger.DefaultOptions("")
 	ops.Logger = nil
 	var err error
@@ -62,6 +77,8 @@ func connectToBadger() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	logrus.Info("Finished connecting to Badger")
 }
 
 func Sha256(password string) string {

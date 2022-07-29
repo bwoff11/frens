@@ -34,7 +34,7 @@ func createStatus(c *fiber.Ctx) error {
 		Sensitive:   false,
 		SpoilerText: "",
 		//MediaAttachments:   []models.Attachment{},
-		Application: nil,
+		//Application: ,
 		//Mentions:           []models.Mention{},
 		//Tags:               []models.Tag{},
 		//Emojis:             []models.Emoji{},
@@ -82,11 +82,7 @@ func deleteStatus(c *fiber.Ctx) error {
 
 // View statuses above and below this status in the thread.
 func getStatusContext(c *fiber.Ctx) error {
-	//id := c.Params("id")
-
-	var context models.Context
-	// to be implemented
-	return c.Status(200).JSON(&context)
+	return c.Status(fiber.StatusNotImplemented).SendString("Not implemented")
 }
 
 func getFavoritedBy(c *fiber.Ctx) error {

@@ -1,5 +1,10 @@
-#At this point, the only point of this document is to hold ideas for later use.
-
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  database: "frens"
+  debug: true # Connect to db.LogMode in db package
 
 auto_like_own_posts: true
 default_avatar: https://i.kym-cdn.com/entries/icons/facebook/000/021/523/apu_apustaja_kym.jpg
@@ -13,20 +18,12 @@ compatibility:
   plemora: true
 
 cache:
-  mode: [memory, file]
-  path: cache/
-  max_size: 100
-  max_age: 3600
+  mode: memory, # memory / file
+  #path: cache/
+  #max_size: 100
+  #max_age: 3600
 
 security:
   jwt_secret: "supersecret"
 
 # Load JWT Secert from env vars, if not load here
-
-database:
-  host: "localhost"
-  port: 3306
-  user: "root"
-  password: "root"
-  database: "instagram"
-  debug_logging: true # Connect to db.LogMode in db package
